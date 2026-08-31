@@ -15,6 +15,13 @@ export const siteConfig = {
     "At Net Feasa I built most of the UI and the CI/CD for two production cross-platform apps (React Native + Expo, TypeScript) shipping from a single codebase to iOS, Android, Web, and Windows — including a custom offline-first sync layer — and serverless data pipelines on AWS provisioned with Pulumi. Before that, at eCreation Media, I cut CI pipeline runtime from over an hour to minutes and shipped zero-downtime production deployments for video-industry clients.",
     "I work fluently with AI coding tools — GitHub Copilot and Claude Code — as a force-multiplier on top of solid engineering fundamentals. Based in Killarney, Ireland, and available for freelance work.",
   ],
+  terminalCommands: [
+    "./build --apps",
+    "deploy --aws",
+    "ship websites",
+    "git push prod",
+    "./init ci-cd",
+  ],
   socials: [
     {
       label: "GitHub",

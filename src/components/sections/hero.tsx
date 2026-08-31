@@ -1,5 +1,5 @@
 import { siteConfig } from "@/content/site";
-import { GlitchLogo } from "@/components/glitch-logo";
+import { TerminalLogo } from "@/components/terminal-logo";
 import { SocialLinks } from "@/components/social-links";
 
 export function Hero() {
@@ -19,8 +19,8 @@ export function Hero() {
       <p className="font-mono text-sm uppercase tracking-widest text-accent">
         {siteConfig.role} · {siteConfig.location}
       </p>
-      <h1 className="mt-4 text-4xl font-bold tracking-tight sm:text-6xl">
-        <GlitchLogo />
+      <h1 className="mt-4 text-[clamp(1.5rem,7vw,3.75rem)] tracking-tight">
+        <TerminalLogo commands={siteConfig.terminalCommands} />
       </h1>
       <p className="mt-6 max-w-2xl text-lg text-foreground/90">
         {siteConfig.tagline}

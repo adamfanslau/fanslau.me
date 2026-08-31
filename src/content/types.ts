@@ -17,6 +17,8 @@ export interface SiteConfig {
   location?: string;
   /** Short paragraphs for the About section. */
   about: string[];
+  /** Short command strings cycled by the terminal-prompt logo (keep ≤16 chars). */
+  terminalCommands: string[];
   socials: SocialLink[];
   nav: { label: string; href: `#${string}` }[];
 }
