@@ -9,6 +9,7 @@ export const projects = [
     tech: ["HTML", "CSS", "JavaScript"],
     kind: "client",
     url: "https://www.timbeestoncleaning.ie/test6.html",
+    image: "/projects/tim-beeston.jpg",
     year: 2026,
   },
   {

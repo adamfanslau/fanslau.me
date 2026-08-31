@@ -19,7 +19,7 @@ export function Projects() {
               <div className="relative -mx-6 -mt-6 mb-5 aspect-video overflow-hidden rounded-t-lg border-b border-accent/15">
                 <Image
                   src={project.image}
-                  alt={`${project.title} gameplay screenshot`}
+                  alt={`${project.title} screenshot`}
                   fill
                   sizes="(min-width: 640px) 26rem, 100vw"
                   className="object-cover"
