@@ -40,7 +40,7 @@ export const projects = [
     url: "/bug-blaster",
     urlLabel: "▶ Play",
     repoUrl: "https://github.com/adamfanslau/bug-blaster",
-    image: "/projects/bug-blaster.png",
+    image: "/projects/bug-blaster-branded.png",
     year: 2026,
   },
 ] satisfies Project[];

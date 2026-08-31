@@ -22,6 +22,14 @@
       canvas {
         image-rendering: pixelated;
         border: 1px solid #30363d;
+        max-width: calc(100vw - 18px);
+        max-height: calc(100vh - 70px);
+        width: auto;
+        height: auto;
+        touch-action: none;
+        -webkit-user-select: none;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
       }
       #controls {
         display: flex;
@@ -35,6 +43,17 @@
         align-items: center;
         gap: 6px;
       }
+      #controls .touch-hint {
+        display: none;
+      }
+      @media (hover: none) and (pointer: coarse) {
+        #controls .kbd-hint {
+          display: none;
+        }
+        #controls .touch-hint {
+          display: flex;
+        }
+      }
       #controls kbd {
         display: inline-block;
         padding: 2px 7px;
@@ -47,14 +66,15 @@
         line-height: 18px;
       }
     </style>
-    <script type="module" crossorigin src="/bug-blaster/assets/index-BI9i7yzm.js"></script>
+    <script type="module" crossorigin src="/bug-blaster/assets/index-Cu2hDyjS.js"></script>
   </head>
   <body>
     <div id="game-wrapper">
       <canvas id="game" width="960" height="540"></canvas>
       <div id="controls">
-        <span class="hint"><kbd>←</kbd><kbd>→</kbd> move</span>
-        <span class="hint"><kbd>Space</kbd> shoot</span>
+        <span class="hint kbd-hint"><kbd>←</kbd><kbd>→</kbd> move</span>
+        <span class="hint kbd-hint"><kbd>Space</kbd> shoot</span>
+        <span class="hint touch-hint">drag to move &middot; auto-fires while touching</span>
       </div>
     </div>
   </body>
