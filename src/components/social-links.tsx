@@ -24,7 +24,7 @@ export function SocialLinks({ className }: { className?: string }) {
             rel="noopener noreferrer"
             aria-label={social.label}
             title={social.label}
-            className="text-muted transition-colors hover:text-foreground"
+            className="text-muted transition-all hover:text-accent hover:drop-shadow-[0_0_6px_var(--glow-cyan)]"
           >
             <svg
               viewBox="0 0 24 24"

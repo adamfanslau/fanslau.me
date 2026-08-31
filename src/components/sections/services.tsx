@@ -3,13 +3,10 @@ import { services } from "@/content/services";
 
 export function Services() {
   return (
-    <Section id="services" title="Services">
+    <Section id="services" title="Services" index="02">
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {services.map((service) => (
-          <article
-            key={service.id}
-            className="rounded-lg border border-border bg-surface p-6"
-          >
+          <article key={service.id} className="neon-card p-6">
             <h3 className="text-lg font-semibold">{service.title}</h3>
             <p className="mt-2 text-sm text-muted">{service.description}</p>
             {service.highlights && (

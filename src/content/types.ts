@@ -15,6 +15,8 @@ export interface SiteConfig {
   url: string;
   email: string;
   location?: string;
+  /** Short paragraphs for the About section. */
+  about: string[];
   socials: SocialLink[];
   nav: { label: string; href: `#${string}` }[];
 }
@@ -31,6 +33,7 @@ export interface Project {
   title: string;
   description: string;
   tech: string[];
+  kind?: "client" | "professional" | "personal";
   url?: string;
   repoUrl?: string;
   year?: number;
@@ -39,4 +42,33 @@ export interface Project {
 export interface SkillCategory {
   category: string;
   items: string[];
+}
+
+export interface ExperienceEntry {
+  id: string;
+  company: string;
+  role: string;
+  start: string;
+  /** Omitted = Present. */
+  end?: string;
+  location?: string;
+  summary: string;
+  highlights: string[];
+  tech: string[];
+}
+
+export interface EducationEntry {
+  id: string;
+  institution: string;
+  credential: string;
+  /** e.g. "First Class Honours". */
+  detail?: string;
+  start: string;
+  end: string;
+}
+
+export interface Certification {
+  name: string;
+  issuer: string;
+  year: number;
 }

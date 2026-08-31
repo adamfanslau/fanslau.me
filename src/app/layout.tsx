@@ -1,8 +1,10 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Orbitron, Share_Tech_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import { TronBackground } from "@/components/background/tron-background";
+import { IntroOverlay } from "@/components/intro/intro-overlay";
 import { siteConfig } from "@/content/site";
 import "./globals.css";
 
@@ -11,9 +13,16 @@ const geistSans = Geist({
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const orbitron = Orbitron({
+  variable: "--font-orbitron",
   subsets: ["latin"],
+  weight: ["500", "700"],
+});
+
+const shareTechMono = Share_Tech_Mono({
+  variable: "--font-share-mono",
+  subsets: ["latin"],
+  weight: "400",
 });
 
 export const metadata: Metadata = {
@@ -40,10 +49,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#fafafa" },
-    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
-  ],
+  themeColor: "#05060a",
 };
 
 const personJsonLd = {
@@ -53,21 +59,43 @@ const personJsonLd = {
   jobTitle: siteConfig.role,
   email: `mailto:${siteConfig.email}`,
   url: siteConfig.url,
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Killarney",
+    addressRegion: "County Kerry",
+    addressCountry: "IE",
+  },
+  alumniOf: "National College of Ireland",
+  knowsAbout: [
+    "TypeScript",
+    "React Native",
+    "AWS",
+    "Serverless",
+    "CI/CD",
+    "Next.js",
+  ],
   sameAs: siteConfig.socials
     .filter((social) => social.platform !== "email")
     .map((social) => social.href),
 };
 
+// Runs synchronously before first paint: returning visitors (and users
+// preferring reduced motion) never see a frame of the intro overlay.
+const introSkipScript = `try{if(sessionStorage.getItem("af-intro")==="1"||matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.dataset.intro="skip"}catch(e){}`;
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${orbitron.variable} ${shareTechMono.variable} antialiased`}
       >
+        <script dangerouslySetInnerHTML={{ __html: introSkipScript }} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
         />
+        <IntroOverlay />
+        <TronBackground />
         <Header />
         <main>{children}</main>
         <Footer />

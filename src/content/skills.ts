@@ -3,25 +3,40 @@ import type { SkillCategory } from "./types";
 export const skills = [
   {
     category: "Languages",
-    items: ["TypeScript", "JavaScript", "Python", "Swift", "Kotlin", "SQL"],
+    items: ["TypeScript", "JavaScript", "Python", "SQL"],
+  },
+  {
+    category: "Mobile & Cross-Platform",
+    items: [
+      "React Native",
+      "Expo",
+      "NativeWind",
+      "Offline-first SQLite sync",
+      "Electron",
+    ],
   },
   {
     category: "Cloud & DevOps",
     items: [
-      "AWS",
-      "Docker",
-      "Kubernetes",
-      "Terraform",
+      "AWS (Lambda, S3, SQS, SNS, EventBridge, Cognito, Transfer Family)",
+      "Pulumi",
+      "GitHub Actions",
       "CI/CD",
       "Serverless",
+      "Docker",
     ],
   },
   {
-    category: "Mobile",
-    items: ["React Native", "iOS", "Android", "Offline-first sync"],
+    category: "Web",
+    items: ["Next.js", "React", "Node.js", "Tailwind CSS"],
   },
   {
-    category: "Web",
-    items: ["Next.js", "React", "Node.js", "Tailwind CSS", "PostgreSQL"],
+    category: "Tooling & Practice",
+    items: [
+      "Jest",
+      "PyTest / TDD",
+      "OpenAPI",
+      "AI-assisted dev (Copilot, Claude Code)",
+    ],
   },
 ] satisfies SkillCategory[];

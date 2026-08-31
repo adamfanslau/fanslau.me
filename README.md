@@ -2,7 +2,7 @@
 
 Personal portfolio and services site for Adam Fanslau — cloud, mobile app, and website development.
 
-**Stack:** Next.js 16 (App Router) · React 19 · Tailwind CSS v4 · TypeScript · deployed on Vercel.
+**Stack:** Next.js 16 (App Router) · React 19 · three.js · Tailwind CSS v4 · TypeScript · deployed on Vercel.
 
 ## Development
 
