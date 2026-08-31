@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Section } from "@/components/section";
 import { projects } from "@/content/projects";
 import type { Project } from "@/content/types";
@@ -14,6 +15,17 @@ export function Projects() {
       <div className="grid gap-6 sm:grid-cols-2">
         {projects.map((project) => (
           <article key={project.id} className="neon-card flex flex-col p-6">
+            {project.image && (
+              <div className="relative -mx-6 -mt-6 mb-5 aspect-video overflow-hidden rounded-t-lg border-b border-accent/15">
+                <Image
+                  src={project.image}
+                  alt={`${project.title} gameplay screenshot`}
+                  fill
+                  sizes="(min-width: 640px) 26rem, 100vw"
+                  className="object-cover"
+                />
+              </div>
+            )}
             <div className="flex items-baseline justify-between gap-4">
               <h3 data-scramble="" className="text-lg font-semibold">
                 {project.title}
@@ -51,7 +63,7 @@ export function Projects() {
                     rel="noopener noreferrer"
                     className="text-accent hover:underline"
                   >
-                    Live site ↗
+                    {project.urlLabel ?? "Live site"} ↗
                   </a>
                 )}
                 {project.repoUrl && (

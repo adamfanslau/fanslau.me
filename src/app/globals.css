@@ -102,11 +102,12 @@ body::after {
     transform: translateY(-2px);
   }
 
-  /* Tron corner brackets on cards. */
+  /* Tron corner brackets on cards (above any card image). */
   .neon-card::before,
   .neon-card::after {
     content: "";
     position: absolute;
+    z-index: 1;
     width: 12px;
     height: 12px;
     border-color: color-mix(in srgb, var(--accent) 70%, transparent);
@@ -228,6 +229,29 @@ body::after {
   91% { clip-path: inset(10% 0 75% 0); }
   92% { clip-path: inset(70% 0 10% 0); }
   93%, 100% { clip-path: inset(0 0 100% 0); }
+}
+
+/* ---------------------------------------------------------------------------
+ * Cyber-tinted profile photo — slight desaturation plus a faint cyan tint
+ * and scanlines so a warm photo composes with the neon theme.
+ * ------------------------------------------------------------------------- */
+.cyber-photo-img {
+  display: block;
+  filter: saturate(0.75) contrast(1.06) brightness(0.95);
+}
+
+.cyber-photo-overlay {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-lg);
+  pointer-events: none;
+  background:
+    linear-gradient(rgb(0 229 255 / 0.1), rgb(255 42 212 / 0.05)),
+    repeating-linear-gradient(
+      0deg,
+      rgb(0 0 0 / 0.12) 0 1px,
+      transparent 1px 3px
+    );
 }
 
 /* ---------------------------------------------------------------------------

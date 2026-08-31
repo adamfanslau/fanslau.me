@@ -37,8 +37,12 @@ export interface Project {
   tech: string[];
   kind?: "client" | "professional" | "personal";
   url?: string;
+  /** Link text for `url` (default "Live site"). */
+  urlLabel?: string;
   repoUrl?: string;
   year?: number;
+  /** Screenshot under public/, e.g. "/projects/bug-blaster.png". */
+  image?: string;
 }
 
 export interface SkillCategory {

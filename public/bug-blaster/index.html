@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bug Blaster</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        background: #0d1117;
+        display: grid;
+        place-items: center;
+      }
+      #game-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+      }
+      canvas {
+        image-rendering: pixelated;
+        border: 1px solid #30363d;
+      }
+      #controls {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        font: 13px/1 monospace;
+        color: #8b949e;
+      }
+      #controls .hint {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      #controls kbd {
+        display: inline-block;
+        padding: 2px 7px;
+        border: 1px solid #30363d;
+        border-bottom-width: 2px;
+        border-radius: 4px;
+        background: #161b22;
+        color: #e6edf3;
+        font: inherit;
+        line-height: 18px;
+      }
+    </style>
+    <script type="module" crossorigin src="/bug-blaster/assets/index-BI9i7yzm.js"></script>
+  </head>
+  <body>
+    <div id="game-wrapper">
+      <canvas id="game" width="960" height="540"></canvas>
+      <div id="controls">
+        <span class="hint"><kbd>←</kbd><kbd>→</kbd> move</span>
+        <span class="hint"><kbd>Space</kbd> shoot</span>
+      </div>
+    </div>
+  </body>
+</html>

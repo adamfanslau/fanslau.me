@@ -30,14 +30,16 @@ export const projects = [
     year: 2025,
   },
   {
-    id: "fanslau-me",
-    title: "fanslau.me",
+    id: "bug-blaster",
+    title: "Bug Blaster",
     description:
-      "This site — a fully static Next.js portfolio with a real-time three.js Tron-grid background, deployed on Vercel.",
-    tech: ["Next.js", "React", "three.js", "Tailwind CSS", "Vercel"],
+      "The most honest production incident simulator ever built: an HTML5 canvas shooter where you defend the codebase by blasting syntax errors, logic bugs, and memory leaks before they ship. Written from scratch in TypeScript — no game engine, no mercy. Playable right here.",
+    tech: ["TypeScript", "HTML5 Canvas", "Vite"],
     kind: "personal",
-    repoUrl: "https://github.com/adamfanslau/fanslau.me",
-    url: "https://fanslau.me",
+    url: "/bug-blaster",
+    urlLabel: "▶ Play",
+    repoUrl: "https://github.com/adamfanslau/bug-blaster",
+    image: "/projects/bug-blaster.png",
     year: 2026,
   },
 ] satisfies Project[];
