@@ -5,6 +5,7 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { TronBackground } from "@/components/background/tron-background";
 import { IntroOverlay } from "@/components/intro/intro-overlay";
+import { ScrambleFx } from "@/components/scramble-fx";
 import { siteConfig } from "@/content/site";
 import "./globals.css";
 
@@ -99,6 +100,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <Header />
         <main>{children}</main>
         <Footer />
+        <ScrambleFx />
         <Analytics />
       </body>
     </html>

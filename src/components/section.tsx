@@ -19,7 +19,7 @@ export function Section({
               {index} /
             </span>
           )}
-          {title}
+          <span data-scramble="">{title}</span>
         </h2>
         <div className="mt-3 h-0.5 w-24 bg-linear-to-r from-accent to-accent-2" />
         <div className="mt-8">{children}</div>

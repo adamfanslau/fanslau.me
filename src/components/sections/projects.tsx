@@ -15,7 +15,9 @@ export function Projects() {
         {projects.map((project) => (
           <article key={project.id} className="neon-card flex flex-col p-6">
             <div className="flex items-baseline justify-between gap-4">
-              <h3 className="text-lg font-semibold">{project.title}</h3>
+              <h3 data-scramble="" className="text-lg font-semibold">
+                {project.title}
+              </h3>
               {project.year && (
                 <span className="font-mono text-xs text-muted">
                   {project.year}

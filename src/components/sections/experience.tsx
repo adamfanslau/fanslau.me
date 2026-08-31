@@ -13,13 +13,15 @@ export function Experience() {
           <li key={entry.id} className="relative">
             <span
               aria-hidden="true"
-              className="absolute -left-[37px] top-7 size-2.5 rounded-full bg-accent shadow-[0_0_8px_var(--glow-cyan)]"
+              className="absolute -left-9.25 top-7 size-2.5 rounded-full bg-accent shadow-[0_0_8px_var(--glow-cyan)]"
             />
             <article className="neon-card p-6">
               <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
                 <h3 className="text-lg font-semibold">
-                  {entry.role}{" "}
-                  <span className="text-accent">@ {entry.company}</span>
+                  <span data-scramble="">{entry.role}</span>{" "}
+                  <span data-scramble="" className="text-accent">
+                    @ {entry.company}
+                  </span>
                 </h3>
                 <span className="font-mono text-xs text-muted">
                   {entry.start} — {entry.end ?? "Present"}
@@ -53,7 +55,10 @@ export function Experience() {
       </ol>
       <div className="mt-10 grid gap-6 sm:grid-cols-2">
         <div>
-          <h3 className="font-mono text-sm uppercase tracking-wide text-muted">
+          <h3
+            data-scramble="mono"
+            className="font-mono text-sm uppercase tracking-wide text-muted"
+          >
             Education
           </h3>
           <ul className="mt-3 space-y-2 text-sm">
@@ -71,7 +76,10 @@ export function Experience() {
           </ul>
         </div>
         <div>
-          <h3 className="font-mono text-sm uppercase tracking-wide text-muted">
+          <h3
+            data-scramble="mono"
+            className="font-mono text-sm uppercase tracking-wide text-muted"
+          >
             Certifications
           </h3>
           <ul className="mt-3 space-y-1.5 text-sm text-muted">

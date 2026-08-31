@@ -11,6 +11,7 @@ export function Contact() {
       </p>
       <a
         href={`mailto:${siteConfig.email}`}
+        data-scramble="hover mono"
         className="mt-6 inline-block font-mono text-xl font-semibold text-accent drop-shadow-[0_0_10px_var(--glow-cyan)] hover:underline sm:text-2xl"
       >
         {siteConfig.email}

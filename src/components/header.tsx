@@ -22,6 +22,7 @@ export function Header() {
               >
                 <a
                   href={item.href}
+                  data-scramble="hover mono"
                   className="font-mono text-[11px] uppercase tracking-widest text-muted transition-colors hover:text-accent sm:text-xs"
                 >
                   {item.label}

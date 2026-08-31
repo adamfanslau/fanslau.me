@@ -16,7 +16,10 @@ export function Hero() {
             "radial-gradient(ellipse 75% 70% at 35% 50%, rgb(5 6 10 / 0.85), transparent 70%)",
         }}
       />
-      <p className="font-mono text-sm uppercase tracking-widest text-accent">
+      <p
+        data-scramble="mono"
+        className="font-mono text-sm uppercase tracking-widest text-accent"
+      >
         {siteConfig.role} · {siteConfig.location}
       </p>
       <h1 className="mt-4 text-[clamp(1.5rem,7vw,3.75rem)] tracking-tight">
