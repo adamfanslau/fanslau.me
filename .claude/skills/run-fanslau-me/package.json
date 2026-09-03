@@ -1,0 +1,8 @@
+{
+  "name": "run-fanslau-me-driver",
+  "private": true,
+  "description": "Skill-local deps for driver.mjs (kept out of the app's package.json). Install: npm --prefix .claude/skills/run-fanslau-me install",
+  "devDependencies": {
+    "playwright-core": "^1.62.1"
+  }
+}
