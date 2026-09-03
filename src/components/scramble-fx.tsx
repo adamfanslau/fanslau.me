@@ -11,17 +11,74 @@ import { useEffect } from "react";
  *   - decodes hover/focus targets on pointerenter/focus.
  * Text nodes are mutated directly — safe on this fully static page where
  * nothing re-renders the tagged subtrees — and always restored verbatim.
+ * While animating, the element's box is frozen at its current width/height
+ * and clipped, so glyph-width churn never reflows surrounding content.
  */
 
 const TICK_MS = 45;
+// Every glyph must live in the `latin` unicode-range that next/font loads —
+// anything else (e.g. ░▒▓) renders in a system fallback font whose metrics
+// jitter the line box.
 const CHARSET = "!<>-_\\/[]{}=+*^?#$%&01";
-const CHARSET_MONO = CHARSET + "░▒▓";
+const CHARSET_MONO = CHARSET + "@|~:;";
+
+// Negative inset leaves room for text-shadow / drop-shadow glows.
+const CLIP = "inset(-0.75em)";
 
 const randInt = (n: number) => Math.floor(Math.random() * n);
 const clamp = (v: number, lo: number, hi: number) =>
   Math.min(hi, Math.max(lo, v));
 
 type Mode = "reveal" | "hover" | "ambient";
+
+/**
+ * Lock the element's box for the duration of an animation. The scrambled
+ * string keeps its character count but not (in proportional fonts) its
+ * advance width, so freeze width and height and clip whatever no longer
+ * fits. clip-path rather than overflow: it never touches layout or the
+ * inline-block baseline. Returns a restore function, or null when the
+ * element can't be boxed safely.
+ */
+const freeze = (el: HTMLElement): (() => void) | null => {
+  const style = el.style;
+  const prevCssText = style.cssText;
+  const restore = () => {
+    style.cssText = prevCssText;
+    if (!prevCssText) el.removeAttribute("style");
+  };
+
+  if (getComputedStyle(el).display === "inline") {
+    // A span broken across lines (experience role/company on narrow
+    // screens) can't be boxed without reflowing the line — leave it alone.
+    if (el.getClientRects().length !== 1) return null;
+    style.display = "inline-block";
+    style.whiteSpace = "nowrap";
+    // Measure after the switch: an inline's rect is the glyph content area,
+    // an inline-block's is its line box. Locking the latter keeps the
+    // baseline where it is.
+    const r = el.getBoundingClientRect();
+    style.width = `${r.width}px`;
+    style.height = `${r.height}px`;
+  } else {
+    // Line count = distinct line tops. React renders "{a} · {b}" as several
+    // text nodes, so a raw rect count over-counts.
+    const range = document.createRange();
+    range.selectNodeContents(el);
+    const tops = new Set<number>();
+    for (const rect of range.getClientRects()) {
+      if (rect.width > 0) tops.add(Math.round(rect.top));
+    }
+    const r = el.getBoundingClientRect();
+    if (tops.size <= 1) style.whiteSpace = "nowrap";
+    // Width too: flex-item targets (project/experience headings, hero and
+    // footer lines) would otherwise grow to the wider string and push
+    // their siblings.
+    style.width = `${r.width}px`;
+    style.height = `${r.height}px`;
+  }
+  style.clipPath = CLIP;
+  return restore;
+};
 
 interface Anim {
   el: HTMLElement;
@@ -141,30 +198,8 @@ export function ScrambleFx() {
         if (/\s/.test(ch)) settleAt[i] = 0;
       });
 
-      // Layout stability: freeze inline widths; protect blocks from
-      // wrap-count changes.
-      const style = el.style;
-      let cleanup: () => void;
-      if (
-        getComputedStyle(el).display === "inline" &&
-        el.getClientRects().length <= 1
-      ) {
-        const width = el.getBoundingClientRect().width;
-        const prevDisplay = style.display;
-        const prevWidth = style.width;
-        style.display = "inline-block";
-        style.width = `${width}px`;
-        cleanup = () => {
-          style.display = prevDisplay;
-          style.width = prevWidth;
-        };
-      } else {
-        const prevMinHeight = style.minHeight;
-        style.minHeight = `${el.offsetHeight}px`;
-        cleanup = () => {
-          style.minHeight = prevMinHeight;
-        };
-      }
+      const cleanup = freeze(el);
+      if (!cleanup) return; // wrapped inline span — not safely animatable
 
       anims.set(el, {
         el,

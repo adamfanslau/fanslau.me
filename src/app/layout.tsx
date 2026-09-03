@@ -6,6 +6,7 @@ import { Footer } from "@/components/footer";
 import { TronBackground } from "@/components/background/tron-background";
 import { IntroOverlay } from "@/components/intro/intro-overlay";
 import { ScrambleFx } from "@/components/scramble-fx";
+import { BackToTop } from "@/components/back-to-top";
 import { siteConfig } from "@/content/site";
 import "./globals.css";
 
@@ -101,6 +102,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <main>{children}</main>
         <Footer />
         <ScrambleFx />
+        <BackToTop />
         <Analytics />
       </body>
     </html>

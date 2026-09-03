@@ -3,10 +3,11 @@ import { TerminalLogo } from "@/components/terminal-logo";
 import { SocialLinks } from "@/components/social-links";
 
 export function Hero() {
+  // scroll-mt-14.25 = header height (h-14 + 1px border) so `#top` lands at scrollY 0.
   return (
     <section
       id="top"
-      className="relative mx-auto flex min-h-[70vh] max-w-4xl flex-col justify-center px-6 py-24 sm:py-32"
+      className="relative mx-auto flex min-h-[70vh] max-w-4xl flex-col justify-center scroll-mt-14.25 px-6 py-24 sm:py-32"
     >
       <div
         aria-hidden="true"

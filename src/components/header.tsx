@@ -1,8 +1,6 @@
 import { siteConfig } from "@/content/site";
+import { MobileMenu } from "./mobile-menu";
 import { TerminalLogo } from "./terminal-logo";
-
-// Nav anchors hidden on the smallest screens to keep the bar on one line.
-const HIDDEN_ON_MOBILE = new Set(["#about", "#experience", "#skills"]);
 
 export function Header() {
   return (
@@ -11,19 +9,15 @@ export function Header() {
         <a href="#top" className="text-sm tracking-tight">
           <TerminalLogo />
         </a>
-        <nav aria-label="Main">
-          <ul className="flex items-center gap-3 sm:gap-5">
+        {/* Inline nav from `sm` up; below that MobileMenu renders the hamburger. */}
+        <nav aria-label="Main" className="max-sm:hidden">
+          <ul className="flex items-center gap-5">
             {siteConfig.nav.map((item) => (
-              <li
-                key={item.href}
-                className={
-                  HIDDEN_ON_MOBILE.has(item.href) ? "max-sm:hidden" : undefined
-                }
-              >
+              <li key={item.href}>
                 <a
                   href={item.href}
                   data-scramble="hover mono"
-                  className="font-mono text-[11px] uppercase tracking-widest text-muted transition-colors hover:text-accent sm:text-xs"
+                  className="font-mono text-xs uppercase tracking-widest text-muted transition-colors hover:text-accent"
                 >
                   {item.label}
                 </a>
@@ -31,6 +25,7 @@ export function Header() {
             ))}
           </ul>
         </nav>
+        <MobileMenu items={siteConfig.nav} />
       </div>
     </header>
   );
