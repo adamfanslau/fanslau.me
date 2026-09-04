@@ -5,10 +5,12 @@ export const projects = [
     id: "tim-beeston-cleaning",
     title: "Tim Beeston Cleaning",
     description:
-      "Website for a family-run cleaning business in Killarney — hero slider, service cards, filterable photo gallery, team profiles, FAQ, and Instagram integration. Lightweight, performance-focused static build.",
+      "New website for a family-run cleaning business in Killarney, replacing a template site: services, before-and-after gallery, team profiles, FAQ, Instagram feed and WhatsApp contact. A lightweight static build that loads fast on a phone.",
     tech: ["HTML", "CSS", "JavaScript"],
     kind: "client",
+    // Client has not promoted the new build to the domain root yet.
     url: "https://www.timbeestoncleaning.ie/test6.html",
+    urlLabel: "Preview",
     image: "/projects/tim-beeston.jpg",
     year: 2026,
   },
@@ -16,7 +18,7 @@ export const projects = [
     id: "netfeasa-apps",
     title: "Cross-Platform IoT Apps",
     description:
-      "Two production apps built with React Native + Expo, shipping one TypeScript codebase to iOS, Android, Web, and Windows desktop — offline-first SQLite sync layer, ~18-component library, Cognito auth, and multi-platform CI/CD.",
+      "Two field apps for an IoT company, built so one TypeScript codebase ships to iOS, Android, web and Windows. They keep working offline and sync when back online; releases to every platform are automated.",
     tech: ["React Native", "Expo", "TypeScript", "AWS Cognito", "GitHub Actions"],
     kind: "professional",
     year: 2025,
@@ -25,7 +27,7 @@ export const projects = [
     id: "roaming-billing-pipeline",
     title: "Serverless Roaming-Billing Pipeline",
     description:
-      "Event-driven telecom billing pipeline on AWS — Python Lambdas triggered by S3 events and EventBridge schedules, provisioned with Pulumi IaC across multi-region dev and prod stacks, with end-to-end tests.",
+      "Telecom billing files processed on AWS automatically, the moment they arrive or on a schedule, with alerts when a step fails. Infrastructure defined as code (Pulumi) across dev and prod in multiple regions, with end-to-end tests.",
     tech: ["Python", "AWS Lambda", "S3", "EventBridge", "Pulumi"],
     kind: "professional",
     year: 2025,

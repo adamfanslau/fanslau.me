@@ -44,6 +44,9 @@ export function IntroOverlay() {
     };
     const onAnimationEnd = (e: AnimationEvent) => {
       if (e.animationName === "intro-exit") {
+        // "done" (vs "skip") tells the effects and the hero entrance that the
+        // intro is over without re-triggering the pre-paint skip styling.
+        document.documentElement.dataset.intro = "done";
         markSeen();
         setGone(true);
       }

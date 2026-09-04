@@ -42,7 +42,6 @@ export const experience = [
       "Developed content-scraping automation in Node.js and image-recognition software in Python (OpenCV, Tesseract OCR) running on AWS Lambda, with a TDD approach.",
       "Optimized CI workflows from 1h+ down to 5–15 min running time, saving the project both time and money.",
       "Implemented transparent zero-downtime production deployments.",
-      "Recognized multiple times for best improvement/optimization across all project teams.",
       "Reviewed code and helped train new developers on the team.",
     ],
     tech: [

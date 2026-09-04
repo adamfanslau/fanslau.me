@@ -1,29 +1,39 @@
 import Image from "next/image";
 import { Section } from "@/components/section";
+import { stagger } from "@/components/stagger";
 import { projects } from "@/content/projects";
 import type { Project } from "@/content/types";
 
 const KIND_LABELS: Record<NonNullable<Project["kind"]>, string> = {
   client: "Client work",
-  professional: "Professional",
+  professional: "Employer project",
   personal: "Personal",
 };
 
+const PILL =
+  "rounded-full border border-accent/25 bg-accent/5 px-2.5 py-0.5 font-mono text-xs text-accent/90 transition-[border-color,translate] hover:-translate-y-px hover:border-accent/60 motion-reduce:transition-none";
+
 export function Projects() {
   return (
-    <Section id="projects" title="Projects" index="04">
+    <Section id="projects" title="Work" index="02">
       <div className="grid gap-6 sm:grid-cols-2">
-        {projects.map((project) => (
-          <article key={project.id} className="neon-card flex flex-col p-6">
+        {projects.map((project, i) => (
+          <article
+            key={project.id}
+            className="neon-card group flex flex-col p-6"
+            data-reveal
+            style={stagger(i)}
+          >
             {project.image && (
-              <div className="relative -mx-6 -mt-6 mb-5 aspect-video overflow-hidden rounded-t-lg border-b border-accent/15">
+              <div className="project-shot relative -mx-6 -mt-6 mb-5 aspect-video overflow-hidden rounded-t-lg border-b border-accent/15">
                 <Image
                   src={project.image}
                   alt={`${project.title} screenshot`}
                   fill
                   sizes="(min-width: 640px) 26rem, 100vw"
-                  className="object-cover"
+                  className="object-cover transition-transform duration-500 ease-out motion-safe:group-hover:scale-[1.04]"
                 />
+                <div aria-hidden="true" className="project-tint" />
               </div>
             )}
             <div className="flex items-baseline justify-between gap-4">
@@ -46,10 +56,7 @@ export function Projects() {
             </p>
             <ul className="mt-4 flex flex-wrap gap-2">
               {project.tech.map((tech) => (
-                <li
-                  key={tech}
-                  className="rounded-full border border-accent/25 bg-accent/5 px-2.5 py-0.5 font-mono text-xs text-accent/90"
-                >
+                <li key={tech} className={PILL}>
                   {tech}
                 </li>
               ))}
@@ -61,9 +68,12 @@ export function Projects() {
                     href={project.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-accent hover:underline"
+                    className="link-underline text-accent"
                   >
-                    {project.urlLabel ?? "Live site"} ↗
+                    {project.urlLabel ?? "Live site"}{" "}
+                    <span aria-hidden="true" className="link-arrow">
+                      ↗
+                    </span>
                   </a>
                 )}
                 {project.repoUrl && (
@@ -71,9 +81,12 @@ export function Projects() {
                     href={project.repoUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-accent hover:underline"
+                    className="link-underline text-accent"
                   >
-                    Source ↗
+                    Source{" "}
+                    <span aria-hidden="true" className="link-arrow">
+                      ↗
+                    </span>
                   </a>
                 )}
               </div>

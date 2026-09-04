@@ -43,7 +43,10 @@ export function TronBackground() {
   }, []);
 
   return (
-    <div aria-hidden="true" className="pointer-events-none fixed inset-0 -z-10">
+    <div
+      aria-hidden="true"
+      className="tron-bg pointer-events-none fixed inset-0 -z-10"
+    >
       <div className="tron-poster" />
       <div ref={wrapRef} className="tron-canvas-wrap" />
     </div>

@@ -41,29 +41,37 @@ npm run build
 node .claude/skills/run-fanslau-me/driver.mjs smoke
 ```
 
-`smoke` loads the page at 1280px and 375px, asserts the header/nav,
-hamburger menu, back-to-top button and console are healthy, prints
-`PASS`/`FAIL` per check, and exits non-zero on any failure. Screenshots land
-in `.claude/skills/run-fanslau-me/shots/` (gitignored):
-`desktop-top.png`, `desktop-backtotop.png`, `mobile-menu-open.png`.
+`smoke` loads the page at 1280px and 375px, asserts the header/nav (inline
+nav item count must equal the mobile panel's — the count is derived from
+`siteConfig.nav`, not hard-coded), hamburger menu, back-to-top button and
+console are healthy, prints `PASS`/`FAIL` per check, and exits non-zero on
+any failure. Screenshots land in `.claude/skills/run-fanslau-me/shots/`
+(gitignored): `desktop-top.png`, `desktop-backtotop.png`,
+`mobile-menu-open.png`.
 
 | command | what it does |
 |---|---|
 | `smoke [--keep]` | Full check at both widths + screenshots. `--keep` leaves the dev server running for follow-up commands. |
-| `shot [selector] [--width=1280] [--name=x] [--scroll=<sel>] [--full=true]` | Screenshot the viewport, or one element. Prints the file path. |
+| `shot [selector] [--width=1280] [--name=x] [--scroll=<sel>] [--hover=<sel>] [--wait=<ms>] [--full=true]` | Screenshot the viewport, or one element. `--scroll` waits 1s for scroll reveals to settle; `--wait` adds settle time (hero entrance ≈1.8s); `--hover` hovers a selector first (card spotlight). Prints the file path. |
 | `scramble <target> <neighbour,...> [--hover] [--intro] [--width] [--ms]` | Layout-stability probe for the scramble effect (below). |
-| `eval '<js>' [--width]` | Evaluate an expression in the loaded page, print JSON. |
+| `eval '<js>' [--width]` | Evaluate an expression in the loaded page, print JSON. An async IIFE string works for multi-step checks (click, wait, measure). |
 
 Common flags: `--width=375` (mobile viewport 375×812; anything ≥640 is
-1280×800 unless given), `--path=/` (route), `--keep` (don't stop a dev server
-the driver started). `APP_URL` overrides `http://localhost:3000`.
+1280×800 unless given), `--path=/` (route — `/cv` is the CV page),
+`--media=print` (emulate the print stylesheet), `--reduced-motion=true`
+(emulate `prefers-reduced-motion: reduce` — the static path: no intro,
+reveals, pulses or scramble), `--keep` (don't stop a dev server the driver
+started). `APP_URL` overrides `http://localhost:3000`.
 
 Verified examples:
 
 ```bash
 node .claude/skills/run-fanslau-me/driver.mjs shot --width=375
 node .claude/skills/run-fanslau-me/driver.mjs shot header --name=header-desktop
-node .claude/skills/run-fanslau-me/driver.mjs eval 'document.title'
+node .claude/skills/run-fanslau-me/driver.mjs shot --wait=1800 --name=hero          # after the entrance sequence
+node .claude/skills/run-fanslau-me/driver.mjs shot --scroll='#contact' --width=375
+node .claude/skills/run-fanslau-me/driver.mjs shot --path=/cv --media=print --full=true
+node .claude/skills/run-fanslau-me/driver.mjs eval 'document.title' --path=/cv
 ```
 
 ### Scramble layout probe
@@ -76,23 +84,28 @@ reports the max movement of each neighbour's rect. Pass = the text actually
 scrambled (`scrambledFrames > 0`) and `maxNeighbourDelta <= 0.5px`.
 
 ```bash
-# Section title (Orbitron span inside the h2) — neighbours: h2, underline bar, section body
-node .claude/skills/run-fanslau-me/driver.mjs scramble '#services h2 [data-scramble]' '#services h2,#services h2 + div,#services h2 ~ .mt-8'
+# Section title (Orbitron span inside the h2) — neighbours: section container, body, next section
+node .claude/skills/run-fanslau-me/driver.mjs scramble '#services h2 [data-scramble]' '#services > div,#services .mt-8,#projects'
 
-# Card heading in a flex row — the year span must not move
-node .claude/skills/run-fanslau-me/driver.mjs scramble '#projects article h3[data-scramble]' '#projects article h3 + span,#projects article > p'
+# Card heading — neighbours: the grid and section container (not the card itself)
+node .claude/skills/run-fanslau-me/driver.mjs scramble '#projects article h3[data-scramble]' '#projects .grid,#projects > div,#about'
 
 # Hover decode on a nav link — neighbours are <li>/<ul>, not other links
-node .claude/skills/run-fanslau-me/driver.mjs scramble 'header nav a[href="#about"]' 'header nav li:nth-child(2),header nav ul' --hover --ms=1300
+node .claude/skills/run-fanslau-me/driver.mjs scramble 'header nav a[href="/#about"]' 'header nav li:nth-child(2),header nav ul' --hover --ms=1300
 
 # Element visible at load (hero eyebrow): use --intro so the 3s intro gate
 # gives a clean window to capture the original text
-node .claude/skills/run-fanslau-me/driver.mjs scramble '#top p[data-scramble]' '#top h1,#top .mt-6' --intro --width=375
+node .claude/skills/run-fanslau-me/driver.mjs scramble '#top p[data-scramble]' '#top,#services' --intro --width=375
 ```
 
 Pick neighbours that are containers or siblings, never other
 `[data-scramble]` elements: their own rect legitimately changes (inline →
-inline-block) while they animate, which reads as a false shift.
+inline-block) while they animate, which reads as a false shift. Since the
+scroll-reveal pass, also avoid anything that animates by design at the same
+moment: `[data-reveal]` elements (cards, the h2 wrapper) rise 14px and
+`.section-bar` scales from 0 to 96px wide as they enter view. Containers
+without `data-reveal` (`#section > div`, `.grid`, the next `<section>`) are
+the reliable neighbours.
 
 ## Run (human path)
 
@@ -113,10 +126,21 @@ There is no test suite. `npm run lint` + `npm run build` + the driver's
 
 ## Gotchas
 
-- **Intro overlay + scramble gate.** First visits show a 3s intro and
-  `ScrambleFx` waits 3s before observing. The driver sets
+- **Intro overlay + scramble/reveal gate.** First visits show a 3s intro and
+  `ScrambleFx` / `RevealFx` wait 3s before observing. The driver sets
   `sessionStorage["af-intro"]="1"` before load to skip both; `scramble --intro`
-  deliberately keeps them.
+  deliberately keeps them. `html[data-intro]` is `"skip"` (returning visitor)
+  or `"done"` (intro finished this page session); absent = intro playing.
+- **Client-side navigation.** `/` ↔ `/cv` via `next/link` keeps the root
+  layout mounted; `ScrambleFx`, `RevealFx`, `HeaderFx` and `BackToTop` re-run
+  on `usePathname()`. A regression here shows up as `[data-reveal]` elements
+  stuck at `opacity: 0` on the destination page — check with an `eval` that
+  clicks `header nav a[href="/cv"]`, waits ~2s, and counts in-viewport
+  `[data-reveal]` with computed opacity < 1 (expect 0).
+- **`data-scrolled` after anchored navigation.** Sections use `scroll-mt-20`
+  (80px) against a 57px header, so the previous block keeps 23px under the
+  header after a `/#section` jump; `HeaderFx` therefore observes with an 81px
+  top margin while `BackToTop` keeps 57px.
 - **Original text is only trustworthy once the load reveal finishes.** Nav
   links and anything in the first viewport scramble right after hydration;
   reading `textContent` too early captures garbage. The driver waits until no

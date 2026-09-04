@@ -5,6 +5,23 @@ export interface SocialLink {
   platform: "github" | "linkedin" | "email";
 }
 
+export interface NavItem {
+  label: string;
+  /** Root-relative so it works from every route: "/#services" or "/cv". */
+  href: `/${string}`;
+  /** "page" renders as an outlined pill — a separate page, not a section. */
+  kind?: "page";
+}
+
+export interface ContactCopy {
+  /** What to put in the first email. */
+  intro: string;
+  /** "How it works" steps, in order. */
+  steps: string[];
+  /** Location / remote note under the steps. */
+  note: string;
+}
+
 export interface SiteConfig {
   name: string;
   role: string;
@@ -15,18 +32,26 @@ export interface SiteConfig {
   url: string;
   email: string;
   location?: string;
+  /** Status-chip text shown in the hero and Contact panel. */
+  availability: string;
   /** Short paragraphs for the About section. */
   about: string[];
   /** Short command strings cycled by the terminal-prompt logo (keep ≤16 chars). */
   terminalCommands: string[];
+  contact: ContactCopy;
   socials: SocialLink[];
-  nav: { label: string; href: `#${string}` }[];
+  nav: NavItem[];
 }
+
+export type ServiceIcon = "web" | "automation" | "cloud";
 
 export interface Service {
   id: string;
   title: string;
+  /** One or two words for the hero tiles, e.g. "Websites". */
+  short: string;
   description: string;
+  icon: ServiceIcon;
   highlights?: string[];
 }
 

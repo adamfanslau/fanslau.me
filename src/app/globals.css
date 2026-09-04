@@ -15,6 +15,12 @@
   --accent-2: #ff2ad4;
   --glow-cyan: rgb(0 229 255 / 0.35);
   --glow-magenta: rgb(255 42 212 / 0.3);
+  /* Hero entrance waits for the intro wipe unless data-intro says it's over. */
+  --hero-delay: 2.8s;
+}
+
+html[data-intro] {
+  --hero-delay: 0.2s;
 }
 
 @theme inline {
@@ -29,6 +35,13 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-share-mono);
   --font-display: var(--font-orbitron);
+}
+
+/* Spotlight strength on .neon-card — registered so it can transition. */
+@property --spot {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -82,26 +95,64 @@ body::after {
 }
 
 /* ---------------------------------------------------------------------------
- * Reusable neon components
+ * Reusable neon components. Inside @layer components so Tailwind utilities
+ * on the same element still win.
  * ------------------------------------------------------------------------- */
 @layer components {
+  /* Card: bordered surface + two background layers — a pointer spotlight
+   * (radial at --mx/--my, strength --spot) and a 1px scanline parked just
+   * above the top edge that sweeps down once on hover. */
   .neon-card {
     position: relative;
     border-radius: var(--radius-lg);
     border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);
-    background: color-mix(in srgb, var(--surface) 80%, transparent);
+    background-color: color-mix(in srgb, var(--surface) 80%, transparent);
+    background-image:
+      radial-gradient(
+        260px circle at var(--mx, 50%) var(--my, 50%),
+        rgb(0 229 255 / calc(var(--spot) * 0.14)),
+        transparent 60%
+      ),
+      linear-gradient(
+        color-mix(in srgb, var(--accent) 70%, transparent),
+        color-mix(in srgb, var(--accent) 70%, transparent)
+      );
+    background-size:
+      auto,
+      100% 1px;
+    background-repeat: no-repeat;
+    background-position:
+      0 0,
+      0 -2px;
     backdrop-filter: blur(4px);
     box-shadow: 0 0 24px -10px var(--glow-cyan);
     transition:
       border-color 0.2s ease,
       box-shadow 0.2s ease,
-      transform 0.2s ease;
+      transform 0.2s ease,
+      --spot 0.3s ease,
+      background-position 0s;
   }
 
   .neon-card:hover {
     border-color: color-mix(in srgb, var(--accent) 50%, transparent);
     box-shadow: 0 0 32px -6px var(--glow-cyan);
     transform: translateY(-2px);
+  }
+
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .neon-card:hover {
+      --spot: 1;
+      background-position:
+        0 0,
+        0 calc(100% + 2px);
+      transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease,
+        --spot 0.3s ease,
+        background-position 0.7s ease-out;
+    }
   }
 
   /* Tron corner brackets on cards (above any card image). */
@@ -115,6 +166,12 @@ body::after {
     border-color: color-mix(in srgb, var(--accent) 70%, transparent);
     border-style: solid;
     pointer-events: none;
+    transition: border-color 0.2s ease;
+  }
+
+  .neon-card:hover::before,
+  .neon-card:hover::after {
+    border-color: var(--accent);
   }
 
   .neon-card::before {
@@ -131,10 +188,628 @@ body::after {
     border-bottom-right-radius: var(--radius-lg);
   }
 
+  /* Panels that hold body copy over the bright horizon band. */
+  .neon-card--solid {
+    background-color: color-mix(in srgb, var(--surface) 88%, transparent);
+    backdrop-filter: blur(8px);
+  }
+
   .neon-heading {
     font-family: var(--font-orbitron);
     text-shadow: 0 0 12px var(--glow-cyan);
   }
+
+  /* Terminal-window title bar for panels. */
+  .term-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid color-mix(in srgb, var(--accent) 15%, transparent);
+    font-family: var(--font-share-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+  }
+
+  .term-dots {
+    display: inline-flex;
+    gap: 0.35rem;
+  }
+
+  .term-dots > span {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 9999px;
+    background: color-mix(in srgb, var(--accent) 55%, transparent);
+  }
+
+  .term-dots > span:nth-child(2) {
+    background: color-mix(in srgb, var(--accent-2) 65%, transparent);
+  }
+
+  .term-dots > span:nth-child(3) {
+    background: color-mix(in srgb, var(--muted) 60%, transparent);
+  }
+
+  /* Availability chip. */
+  .status-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-share-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .status-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 9999px;
+    background: var(--accent);
+    box-shadow: 0 0 8px var(--glow-cyan);
+  }
+
+  /* Hero service tiles. */
+  .hero-tile {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+    border-radius: var(--radius-md);
+    padding: 0.5rem 0.875rem;
+    font-size: 0.875rem;
+    background: color-mix(in srgb, var(--surface) 60%, transparent);
+    backdrop-filter: blur(4px);
+    transition:
+      border-color 0.2s ease,
+      box-shadow 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  .hero-tile:hover {
+    border-color: var(--accent);
+    box-shadow: 0 0 18px -4px var(--glow-cyan);
+    transform: translateY(-1px);
+  }
+
+  .hero-tile-index {
+    font-family: var(--font-share-mono);
+    font-size: 0.75rem;
+    color: var(--accent-2);
+  }
+
+  /* Buttons. */
+  .btn-primary,
+  .btn-secondary {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: var(--radius-md);
+    padding: 0.625rem 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.25rem;
+    transition:
+      box-shadow 0.25s ease,
+      background-color 0.25s ease,
+      border-color 0.25s ease,
+      filter 0.25s ease,
+      transform 0.15s ease;
+  }
+
+  .btn-primary:active,
+  .btn-secondary:active {
+    transform: scale(0.98);
+  }
+
+  .btn-primary {
+    overflow: hidden;
+    background: var(--accent);
+    color: var(--accent-foreground);
+    box-shadow: 0 0 20px var(--glow-cyan);
+  }
+
+  .btn-primary:hover {
+    filter: brightness(1.08);
+  }
+
+  /* Diagonal light sweep, parked off-canvas until hover. */
+  .btn-primary::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(
+      115deg,
+      transparent 35%,
+      rgb(255 255 255 / 0.45) 50%,
+      transparent 65%
+    );
+    transform: translateX(-120%);
+  }
+
+  .btn-secondary {
+    border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+    color: var(--accent);
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
+    box-shadow: inset 0 0 14px -6px var(--glow-cyan);
+  }
+
+  /* Text link whose underline draws in from the left. */
+  .link-underline {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 0% 1px;
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    transition: background-size 0.3s ease;
+  }
+
+  .link-underline:hover,
+  .link-underline:focus-visible {
+    background-size: 100% 1px;
+  }
+
+  .link-arrow {
+    display: inline-block;
+    transition: translate 0.2s ease;
+  }
+
+  a:hover .link-arrow {
+    translate: 2px -2px;
+  }
+
+  /* Service card icon. */
+  .icon-frame {
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+    border-radius: var(--radius-md);
+    background: color-mix(in srgb, var(--accent) 6%, transparent);
+    color: var(--accent);
+  }
+
+  .icon-frame svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    filter: drop-shadow(0 0 6px var(--glow-cyan));
+  }
+
+  /* Header nav. */
+  .nav-link {
+    position: relative;
+  }
+
+  .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -6px;
+    height: 1px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.25s ease;
+  }
+
+  .nav-link:hover::after {
+    transform: scaleX(1);
+  }
+
+  .nav-pill {
+    display: inline-block;
+    border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
+    border-radius: var(--radius-sm);
+    padding: 0.125rem 0.5rem;
+    font-family: var(--font-share-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    transition:
+      border-color 0.2s ease,
+      background-color 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+
+  .nav-pill:hover {
+    border-color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
+    box-shadow: 0 0 12px -4px var(--glow-cyan);
+  }
+
+  /* Scroll progress along the header's bottom edge. Only rendered where CSS
+   * scroll-driven animations exist (see the motion block below). */
+  .scroll-progress {
+    display: none;
+    position: absolute;
+    left: 0;
+    bottom: -1px;
+    height: 2px;
+    width: 100%;
+    transform: scaleX(0);
+    transform-origin: left;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  }
+
+  /* Hero scroll cue. */
+  .scroll-cue {
+    position: absolute;
+    left: 1.5rem;
+    bottom: 1.5rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-share-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    transition:
+      opacity 0.3s ease,
+      color 0.2s ease;
+  }
+
+  .scroll-cue:hover {
+    color: var(--accent);
+  }
+
+  /* Section chrome: gradient divider with a magenta tick at the column's
+   * left edge, a ghost chapter numeral, and the drawing underline. */
+  .section-divider::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      color-mix(in srgb, var(--accent) 40%, transparent) 25% 75%,
+      transparent
+    );
+  }
+
+  .section-divider::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: calc(max(0px, 50% - 28rem) + 1.5rem);
+    width: 2rem;
+    height: 2px;
+    background: var(--accent-2);
+    box-shadow: 0 0 8px var(--glow-magenta);
+  }
+
+  .section-ghost {
+    position: absolute;
+    top: 2.5rem;
+    right: 1.5rem;
+    font-family: var(--font-orbitron);
+    font-weight: 700;
+    line-height: 1;
+    font-size: clamp(4.5rem, 14vw, 8rem);
+    letter-spacing: -0.02em;
+    color: rgb(0 229 255 / 0.04);
+    -webkit-text-stroke: 1px rgb(0 229 255 / 0.14);
+    mask-image: linear-gradient(to bottom, black 30%, transparent);
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .section-bar {
+    transform-origin: left;
+  }
+
+  /* "How it works" stepper: numbered nodes joined by a gradient line —
+   * horizontal from `sm`, vertical below. */
+  .stepper {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .stepper > li {
+    position: relative;
+    display: flex;
+    gap: 0.75rem;
+  }
+
+  .stepper > li:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    left: 1rem;
+    top: 2.25rem;
+    bottom: -1.25rem;
+    width: 1px;
+    background: linear-gradient(180deg, var(--accent), var(--accent-2));
+    opacity: 0.5;
+  }
+
+  @media (min-width: 40rem) {
+    .stepper {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1rem;
+    }
+
+    .stepper > li {
+      flex-direction: column;
+    }
+
+    .stepper > li:not(:last-child)::after {
+      left: 2.5rem;
+      right: -1rem;
+      top: 1rem;
+      bottom: auto;
+      width: auto;
+      height: 1px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    }
+  }
+
+  .stepper-node {
+    position: relative;
+    z-index: 1;
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 9999px;
+    border: 1px solid color-mix(in srgb, var(--accent) 60%, transparent);
+    background: var(--surface);
+    font-family: var(--font-share-mono);
+    font-size: 0.75rem;
+    color: var(--accent);
+    box-shadow: 0 0 0 var(--glow-cyan);
+    transition: box-shadow 0.5s ease;
+  }
+
+  .is-in .stepper-node {
+    box-shadow: 0 0 14px var(--glow-cyan);
+  }
+
+  /* Experience timeline spine (drawn on scroll where supported) and node. */
+  .timeline-line {
+    transform-origin: top;
+  }
+
+  /* One-shot expanding ring when the entry reveals. */
+  .timeline-dot::after {
+    content: "";
+    position: absolute;
+    inset: -3px;
+    border-radius: 9999px;
+    border: 1px solid var(--accent);
+    opacity: 0;
+  }
+
+  /* Project screenshot: cyan tint that lifts on hover. */
+  .project-tint {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(
+      rgb(0 229 255 / 0.14),
+      rgb(255 42 212 / 0.06)
+    );
+    transition: opacity 0.3s ease;
+  }
+
+  .group:hover .project-tint {
+    opacity: 0.25;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * Motion. Everything here is skipped under prefers-reduced-motion: reduce,
+ * in which case elements simply render in their final state.
+ * ------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: no-preference) {
+  .hero-in {
+    animation: hero-in 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    animation-delay: calc(var(--hero-delay) + var(--n, 0) * 120ms);
+  }
+
+  /* Scroll reveals: hidden only once the pre-paint script arms html[data-reveal]. */
+  html[data-reveal] [data-reveal] {
+    opacity: 0;
+  }
+
+  html[data-reveal] [data-reveal].is-in {
+    opacity: 1;
+    animation: reveal-in 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    animation-delay: calc(var(--i, 0) * 80ms);
+  }
+
+  html[data-reveal] .section-bar {
+    transform: scaleX(0);
+  }
+
+  html[data-reveal] .is-in .section-bar {
+    transform: scaleX(1);
+    animation: bar-draw 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) 0.3s both;
+  }
+
+  .status-dot {
+    animation: status-pulse 2s ease-in-out infinite;
+  }
+
+  .scroll-cue svg {
+    animation: cue-bob 1.6s ease-in-out infinite;
+  }
+
+  .btn-primary {
+    animation: cta-breathe 3s ease-in-out infinite;
+  }
+
+  .btn-primary:hover::before,
+  .btn-primary:focus-visible::before {
+    animation: btn-sweep 0.7s ease-out forwards;
+  }
+
+  @supports (animation-timeline: scroll()) {
+    .scroll-progress {
+      display: block;
+      animation: progress-grow linear both;
+      animation-timeline: scroll(root);
+    }
+  }
+
+  @supports (animation-timeline: view()) {
+    .timeline-line {
+      animation: line-grow linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 55%;
+    }
+  }
+
+  .is-in .timeline-dot::after {
+    animation: dot-ping 1s ease-out 0.2s both;
+  }
+}
+
+@keyframes dot-ping {
+  from {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(2.8);
+  }
+}
+
+@keyframes hero-in {
+  from {
+    opacity: 0;
+    translate: 0 14px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@keyframes reveal-in {
+  from {
+    opacity: 0;
+    translate: 0 14px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@keyframes bar-draw {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes status-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    box-shadow: 0 0 6px var(--glow-cyan);
+  }
+  50% {
+    opacity: 0.55;
+    box-shadow: 0 0 14px var(--glow-cyan);
+  }
+}
+
+@keyframes cue-bob {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 6px;
+  }
+}
+
+@keyframes cta-breathe {
+  0%,
+  100% {
+    box-shadow: 0 0 20px var(--glow-cyan);
+  }
+  50% {
+    box-shadow: 0 0 34px var(--glow-cyan);
+  }
+}
+
+@keyframes btn-sweep {
+  to {
+    transform: translateX(120%);
+  }
+}
+
+@keyframes progress-grow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes line-grow {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * State written by header-fx.tsx. Unlayered so it beats utilities.
+ * ------------------------------------------------------------------------- */
+.site-header {
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease,
+    background-color 0.3s ease;
+}
+
+html[data-scrolled] .site-header {
+  border-color: color-mix(in srgb, var(--accent) 35%, transparent);
+  box-shadow: 0 10px 30px -18px var(--glow-cyan);
+  background-color: color-mix(in srgb, var(--background) 88%, transparent);
+}
+
+html[data-scrolled] .scroll-cue {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.nav-link[aria-current] {
+  color: var(--accent);
+  text-shadow: 0 0 8px var(--glow-cyan);
+}
+
+.nav-link[aria-current]::after {
+  transform: scaleX(1);
+}
+
+.nav-pill[aria-current="page"] {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
 }
 
 /* ---------------------------------------------------------------------------
@@ -429,5 +1104,77 @@ html[data-intro="skip"] .intro-overlay {
 @keyframes intro-hint-in {
   to {
     opacity: 0.8;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * Print — turns /cv into a real CV. Retokening :root recolours every
+ * utility; chrome and effects are hidden. Unlayered so it beats everything.
+ * ------------------------------------------------------------------------- */
+@media print {
+  :root {
+    color-scheme: light;
+    --background: #fff;
+    --foreground: #111;
+    --muted: #444;
+    --surface: #fff;
+    --border: #bbb;
+    --accent: #0b6e86;
+    --accent-foreground: #fff;
+    --accent-2: #8a1a6e;
+    --glow-cyan: transparent;
+    --glow-magenta: transparent;
+  }
+
+  body::before,
+  body::after,
+  header,
+  footer,
+  .intro-overlay,
+  .tron-bg,
+  .back-to-top,
+  .scroll-cue,
+  .section-ghost,
+  .cyber-photo-overlay,
+  .print-hidden {
+    display: none !important;
+  }
+
+  .neon-card {
+    box-shadow: none;
+    backdrop-filter: none;
+    background-image: none;
+    break-inside: avoid;
+  }
+
+  .neon-heading,
+  .term-line,
+  .term-prefix {
+    text-shadow: none;
+  }
+
+  .cyber-photo-img {
+    filter: none;
+  }
+
+  section > div {
+    padding-top: 1.25rem !important;
+    padding-bottom: 1.25rem !important;
+  }
+
+  .hero-in,
+  html[data-reveal] [data-reveal] {
+    opacity: 1 !important;
+    animation: none !important;
+  }
+
+  html[data-reveal] .section-bar {
+    transform: none;
+  }
+
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+    color: var(--muted);
   }
 }

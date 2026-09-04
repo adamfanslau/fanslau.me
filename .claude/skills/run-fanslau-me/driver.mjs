@@ -91,7 +91,7 @@ async function openPage(browser, { skipIntro = true } = {}) {
   const ctx = await browser.newContext({ viewport: { width, height }, deviceScaleFactor: 1 });
   if (skipIntro) {
     // Returning-visitor flag: hides the 3s intro overlay and un-gates the
-    // scramble reveal wave so the page is interactive immediately.
+    // scramble/reveal waves so the page is interactive immediately.
     await ctx.addInitScript(() => {
       try {
         sessionStorage.setItem("af-intro", "1");
@@ -99,6 +99,14 @@ async function openPage(browser, { skipIntro = true } = {}) {
     });
   }
   const page = await ctx.newPage();
+  // --media=print emulates the print stylesheet; --reduced-motion emulates
+  // prefers-reduced-motion: reduce (static path: no intro, reveals, pulses).
+  if (flags.media || flags["reduced-motion"]) {
+    await page.emulateMedia({
+      media: flags.media,
+      reducedMotion: flags["reduced-motion"] ? "reduce" : undefined,
+    });
+  }
   const errors = [];
   page.on("console", (m) => m.type() === "error" && errors.push(m.text()));
   page.on("pageerror", (e) => errors.push(String(e)));
@@ -126,12 +134,17 @@ async function smoke(browser) {
   {
     const { page, errors } = await openPage(browser);
     const header = await page.evaluate(() => ({
-      inlineLinks: [...document.querySelectorAll("header nav a[data-scramble]")].filter(
+      inlineLinks: [...document.querySelectorAll("header nav.max-sm\\:hidden a")].filter(
         (a) => a.getClientRects().length > 0,
       ).length,
+      mobileLinks: document.querySelectorAll("#mobile-nav a").length,
       hamburger: getComputedStyle(document.querySelector('button[aria-label="Menu"]')).display,
     }));
-    check("desktop: 6 inline nav links, hamburger hidden", header.inlineLinks === 6 && header.hamburger === "none", header);
+    check(
+      "desktop: inline nav shows every nav item, hamburger hidden",
+      header.inlineLinks > 0 && header.inlineLinks === header.mobileLinks && header.hamburger === "none",
+      header,
+    );
 
     const btt = 'a[aria-label="Back to top"]';
     await sleep(700); // visibility transitions discretely after 300ms
@@ -176,10 +189,15 @@ async function smoke(browser) {
       expanded: document.querySelector('button[aria-label="Menu"]').getAttribute("aria-expanded"),
       panel: getComputedStyle(document.getElementById("mobile-nav")).visibility,
       links: [...document.querySelectorAll("#mobile-nav a")].map((a) => a.textContent.trim()),
+      inlineCount: document.querySelectorAll("header nav.max-sm\\:hidden a").length,
       scrollLocked: document.documentElement.style.overflow === "hidden",
     }));
     await page.screenshot({ path: join(SHOTS, "mobile-menu-open.png") });
-    check("mobile: menu opens with 6 links and locks scroll", open.expanded === "true" && open.panel === "visible" && open.links.length === 6 && open.scrollLocked, open);
+    check(
+      "mobile: menu opens with every nav item and locks scroll",
+      open.expanded === "true" && open.panel === "visible" && open.links.length > 0 && open.links.length === open.inlineCount && open.scrollLocked,
+      open,
+    );
     await page.keyboard.press("Escape");
     await sleep(400);
     const esc = await page.evaluate(() => ({
@@ -201,8 +219,12 @@ async function shot(browser) {
   const { page } = await openPage(browser);
   if (flags.scroll) {
     await page.evaluate((s) => document.querySelector(s)?.scrollIntoView({ block: "start" }), flags.scroll);
-    await sleep(300);
+    // Scroll reveals take ~0.6s plus stagger; let them settle before capture.
+    await sleep(1000);
   }
+  if (flags.hover) await page.hover(flags.hover);
+  // --wait=<ms>: extra settle time (e.g. the hero entrance sequence).
+  if (flags.wait) await sleep(Number(flags.wait));
   const file = join(SHOTS, `${flags.name ?? `shot-${width}${selector ? "-el" : ""}`}.png`);
   if (selector) await page.locator(selector).first().screenshot({ path: file });
   else await page.screenshot({ path: file, fullPage: flags.full === "true" });

@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { siteConfig } from "@/content/site";
 
 // Add new routes here as the site grows, e.g. "/blog".
-const routes = ["/"];
+const routes = ["/", "/cv"];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return routes.map((route) => ({

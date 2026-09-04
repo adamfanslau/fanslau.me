@@ -1,19 +1,24 @@
 import { Section } from "@/components/section";
+import { stagger } from "@/components/stagger";
 import { certifications, education, experience } from "@/content/experience";
 
-export function Experience() {
+const PILL =
+  "rounded-full border border-accent/25 bg-accent/5 px-2.5 py-0.5 font-mono text-xs text-accent/90 transition-[border-color,translate] hover:-translate-y-px hover:border-accent/60 motion-reduce:transition-none";
+
+/** Work-history timeline. Lives on /cv. */
+export function Experience({ index = "01" }: { index?: string }) {
   return (
-    <Section id="experience" title="Experience" index="03">
+    <Section id="experience" title="Experience" index={index}>
       <ol className="relative space-y-8 border-l-0 pl-8">
         <div
           aria-hidden="true"
-          className="absolute bottom-0 left-0 top-0 w-px bg-linear-to-b from-accent to-accent-2"
+          className="timeline-line absolute bottom-0 left-0 top-0 w-px bg-linear-to-b from-accent to-accent-2"
         />
-        {experience.map((entry) => (
-          <li key={entry.id} className="relative">
+        {experience.map((entry, i) => (
+          <li key={entry.id} className="relative" data-reveal style={stagger(i)}>
             <span
               aria-hidden="true"
-              className="absolute -left-9.25 top-7 size-2.5 rounded-full bg-accent shadow-[0_0_8px_var(--glow-cyan)]"
+              className="timeline-dot absolute -left-9.25 top-7 size-2.5 rounded-full bg-accent shadow-[0_0_8px_var(--glow-cyan)]"
             />
             <article className="neon-card p-6">
               <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
@@ -41,10 +46,7 @@ export function Experience() {
               </ul>
               <ul className="mt-4 flex flex-wrap gap-2">
                 {entry.tech.map((tech) => (
-                  <li
-                    key={tech}
-                    className="rounded-full border border-accent/25 bg-accent/5 px-2.5 py-0.5 font-mono text-xs text-accent/90"
-                  >
+                  <li key={tech} className={PILL}>
                     {tech}
                   </li>
                 ))}
@@ -53,8 +55,16 @@ export function Experience() {
           </li>
         ))}
       </ol>
-      <div className="mt-10 grid gap-6 sm:grid-cols-2">
-        <div>
+    </Section>
+  );
+}
+
+/** Education and certifications. Lives on /cv. */
+export function Education({ index = "02" }: { index?: string }) {
+  return (
+    <Section id="education" title="Education & Certifications" index={index}>
+      <div className="grid gap-6 sm:grid-cols-2">
+        <div data-reveal>
           <h3
             data-scramble="mono"
             className="font-mono text-sm uppercase tracking-wide text-muted"
@@ -75,7 +85,7 @@ export function Experience() {
             ))}
           </ul>
         </div>
-        <div>
+        <div data-reveal style={stagger(1)}>
           <h3
             data-scramble="mono"
             className="font-mono text-sm uppercase tracking-wide text-muted"

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
 // Header height (h-14 + 1px border): the hero counts as "left" once it has
 // slid fully under it.
@@ -11,11 +12,15 @@ const HEADER_PX = 57;
  * is keyboard-native, moves the focus start point to the hero, and smooth
  * scrolling comes from `html { scroll-behavior: smooth }`. Visibility is
  * driven by an IntersectionObserver on the hero — no per-frame scroll work.
+ * Re-binds per route: each page provides its own `#top`.
  */
 export function BackToTop() {
+  const pathname = usePathname();
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
+    // Every route renders a `#top`; the observer reports its initial state
+    // synchronously on observe, so no manual reset is needed on route change.
     const hero = document.getElementById("top");
     if (!hero) return;
     const io = new IntersectionObserver(
@@ -24,13 +29,13 @@ export function BackToTop() {
     );
     io.observe(hero);
     return () => io.disconnect();
-  }, []);
+  }, [pathname]);
 
   return (
     <a
       href="#top"
       aria-label="Back to top"
-      className={`neon-card fixed right-[max(1.25rem,env(safe-area-inset-right))] bottom-[max(1.25rem,env(safe-area-inset-bottom))] z-40 grid size-11 place-items-center text-accent transition-[opacity,translate,visibility,border-color,box-shadow] duration-300 ease-out motion-reduce:transition-none ${
+      className={`neon-card back-to-top fixed right-[max(1.25rem,env(safe-area-inset-right))] bottom-[max(1.25rem,env(safe-area-inset-bottom))] z-40 grid size-11 place-items-center text-accent transition-[opacity,translate,visibility,border-color,box-shadow] duration-300 ease-out motion-reduce:transition-none ${
         visible
           ? "visible translate-y-0 opacity-100"
           : "invisible translate-y-3 opacity-0"

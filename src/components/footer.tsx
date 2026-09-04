@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { siteConfig } from "@/content/site";
 import { SocialLinks } from "./social-links";
 
@@ -8,7 +9,15 @@ export function Footer() {
         <p data-scramble="mono">
           © {new Date().getFullYear()} {siteConfig.name} · {siteConfig.location}
         </p>
-        <SocialLinks />
+        <div className="flex items-center gap-5">
+          <Link
+            href="/cv"
+            className="link-underline uppercase tracking-widest transition-colors hover:text-accent"
+          >
+            CV
+          </Link>
+          <SocialLinks />
+        </div>
       </div>
     </footer>
   );

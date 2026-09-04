@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 
 /**
  * Site-wide scramble/decode effect. Server components tag short text
@@ -93,7 +94,12 @@ interface Anim {
 }
 
 export function ScrambleFx() {
+  // The root layout persists across client-side navigations, so rescan the
+  // tagged elements every time the route (and therefore <main>) changes.
+  const pathname = usePathname();
+
   useEffect(() => {
+    if (!pathname) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const els = Array.from(
@@ -235,10 +241,11 @@ export function ScrambleFx() {
 
     const beginObserving = () => els.forEach((el) => io.observe(el));
 
-    // The intro overlay only sets data-intro="skip" on manual skip, so gate
-    // the first reveal wave on a fixed delay matching the intro timeline.
+    // `data-intro` is "skip" (returning visitor / manual skip) or "done"
+    // (intro already finished this page session). Absent = the intro is
+    // playing now, so gate the first reveal wave on its timeline.
     let gateTimer: ReturnType<typeof setTimeout> | undefined;
-    if (document.documentElement.dataset.intro !== "skip") {
+    if (!document.documentElement.dataset.intro) {
       gateTimer = setTimeout(beginObserving, 3000);
     } else {
       beginObserving();
@@ -254,6 +261,22 @@ export function ScrambleFx() {
       el.addEventListener("pointerenter", onHover);
       el.addEventListener("focus", onHover);
     }
+
+    // --- Printing: settle every string so a CV never prints mid-decode -------
+    const settleAll = () => {
+      for (const anim of anims.values()) {
+        anim.el.textContent = anim.original;
+        anim.cleanup();
+      }
+      anims.clear();
+    };
+    const onBeforePrint = () => {
+      clearTimeout(ambientTimer);
+      settleAll();
+    };
+    const onAfterPrint = () => scheduleAmbient();
+    window.addEventListener("beforeprint", onBeforePrint);
+    window.addEventListener("afterprint", onAfterPrint);
 
     // --- Ambient: one random visible element every 8-14s --------------------
     let ambientTimer: ReturnType<typeof setTimeout>;
@@ -282,19 +305,17 @@ export function ScrambleFx() {
       clearTimeout(gateTimer);
       clearTimeout(ambientTimer);
       io.disconnect();
+      window.removeEventListener("beforeprint", onBeforePrint);
+      window.removeEventListener("afterprint", onAfterPrint);
       for (const el of hoverEls) {
         el.removeEventListener("pointerenter", onHover);
         el.removeEventListener("focus", onHover);
       }
       cancelAnimationFrame(raf);
       running = false;
-      for (const anim of anims.values()) {
-        anim.el.textContent = anim.original;
-        anim.cleanup();
-      }
-      anims.clear();
+      settleAll();
     };
-  }, []);
+  }, [pathname]);
 
   return null;
 }

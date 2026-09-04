@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 import { siteConfig } from "@/content/site";
 
-export const alt = `${siteConfig.name} — ${siteConfig.role}`;
+export const alt = `${siteConfig.name} — websites, automation and AWS cloud services, Killarney, Kerry`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -24,7 +24,7 @@ export default function OpengraphImage() {
         }}
       >
         <div style={{ fontSize: 26, color: "#00e5ff", letterSpacing: 4 }}>
-          SOFTWARE ENGINEER · FULL-STACK & CLOUD
+          WEBSITES · AUTOMATION · AWS CLOUD
         </div>
         <div
           style={{
@@ -52,7 +52,7 @@ export default function OpengraphImage() {
             maxWidth: 900,
           }}
         >
-          Cross-platform apps · Serverless AWS · Websites
+          Freelance software engineer · Killarney, Co. Kerry, Ireland
         </div>
         <div style={{ fontSize: 28, color: "#00e5ff", marginTop: 48 }}>
           fanslau.me

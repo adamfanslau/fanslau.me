@@ -17,10 +17,10 @@ npm run lint    # ESLint
 
 All copy lives in typed data files under [src/content/](src/content/) — components never hardcode content:
 
-- `site.ts` — name, role, tagline, meta description, email, social links, nav
-- `services.ts` — services offered
-- `projects.ts` — portfolio projects
-- `skills.ts` — skill categories
+- `site.ts` — name, role, tagline, meta description, availability chip, About paragraphs, Contact intro / "How it works" steps, email, social links, nav
+- `services.ts` — the three service pillars (Websites · Automation · Cloud) with icons and hero-tile labels
+- `projects.ts` — portfolio projects (the "Work" section)
+- `experience.ts`, `skills.ts` — CV content, rendered on the `/cv` page (printable via the page's Print button)
 
 ## Deployment
 

@@ -12,10 +12,13 @@ const deleteDelay = () => 35 + Math.random() * 15;
 
 export function TerminalLogo({
   text = "adamfanslau",
+  label,
   commands,
   className,
 }: {
   text?: string;
+  /** Screen-reader text; defaults to `text`. Lets the hero H1 carry keywords. */
+  label?: string;
   /** Cycled between retypes of `text`. Omit for a calmer name-only loop. */
   commands?: string[];
   className?: string;
@@ -70,8 +73,10 @@ export function TerminalLogo({
       });
     };
 
-    if (document.documentElement.dataset.intro !== "skip") {
-      // Type the name in fresh, landing right as the intro wipe finishes.
+    // `data-intro` is "skip" (returning visitor / manual skip) or "done"
+    // (intro finished earlier this page session); absent means the intro is
+    // playing right now, so type the name in as its wipe finishes.
+    if (!document.documentElement.dataset.intro) {
       schedule(() => runCycle(text), 2800);
     } else {
       // Name is already rendered — hold it briefly, then enter the cycle.
@@ -86,7 +91,7 @@ export function TerminalLogo({
 
   return (
     <span className={className}>
-      <span className="sr-only">{text}</span>
+      <span className="sr-only">{label ?? text}</span>
       <span aria-hidden="true" className="term-line">
         <span className="term-prefix">{"~$ "}</span>
         <span className="glitch-text" data-text={display}>

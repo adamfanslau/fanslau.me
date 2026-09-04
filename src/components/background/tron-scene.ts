@@ -19,8 +19,9 @@ const GRID_FRAGMENT = /* glsl */ `
 
   void main() {
     // Grid coordinates: 4-unit cells, scrolling toward the camera (+z).
+    // uTime is the accumulated grid travel (base speed + scroll boost).
     vec2 p = vWorld.xz / 4.0;
-    p.y -= uTime * 0.45;
+    p.y -= uTime;
 
     vec2 cell = abs(fract(p - 0.5) - 0.5);
     // Anti-aliased 1px core line.
@@ -164,9 +165,22 @@ export function initTronScene(container: HTMLElement): () => void {
   };
   window.addEventListener("pointermove", onPointerMove, { passive: true });
 
+  // --- Scroll boost: the grid throttles up while the page scrolls ------------
+  // Accumulates |Δscroll| and decays every frame, so the floor rushes toward
+  // the camera during a scroll and settles back to the idle drift.
+  let boost = 0;
+  let lastScrollY = window.scrollY;
+  const onScroll = () => {
+    const y = window.scrollY;
+    boost = Math.min(1.2, boost + Math.abs(y - lastScrollY) / 700);
+    lastScrollY = y;
+  };
+  window.addEventListener("scroll", onScroll, { passive: true });
+
   // --- Animation loop ---------------------------------------------------------
   const clock = new THREE.Clock();
   let elapsed = 0;
+  let gridTravel = 0;
   let raf = 0;
   let running = false;
 
@@ -176,7 +190,9 @@ export function initTronScene(container: HTMLElement): () => void {
     const dt = Math.min(clock.getDelta(), 0.1);
     elapsed += dt;
 
-    gridUniforms.uTime.value = elapsed;
+    boost = Math.max(0, boost - dt * 1.2);
+    gridTravel += dt * (0.45 + boost * 0.9);
+    gridUniforms.uTime.value = gridTravel;
 
     for (const solid of solids) {
       solid.mesh.rotation.x += solid.rotX * dt;
@@ -191,7 +207,8 @@ export function initTronScene(container: HTMLElement): () => void {
     const driftY = Math.cos(elapsed * 0.13) * 0.08;
     camera.position.x += (targetX + driftX - camera.position.x) * 0.05;
     camera.position.y += (2.2 + targetY + driftY - camera.position.y) * 0.05;
-    camera.lookAt(0, 1, -40);
+    // Nose dips slightly while boosting — reads as acceleration.
+    camera.lookAt(0, 1 - boost * 0.5, -40);
 
     renderer.render(scene, camera);
   };
@@ -242,6 +259,7 @@ export function initTronScene(container: HTMLElement): () => void {
     stopLoop();
     document.removeEventListener("visibilitychange", onVisibility);
     window.removeEventListener("pointermove", onPointerMove);
+    window.removeEventListener("scroll", onScroll);
     window.removeEventListener("resize", onResize);
     clearTimeout(resizeTimer);
     renderer.domElement.removeEventListener("webglcontextlost", onContextLost);
