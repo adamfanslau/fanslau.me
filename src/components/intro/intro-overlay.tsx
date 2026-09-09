@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { AfMark } from "@/components/af-mark";
 
 const SESSION_KEY = "af-intro";
 
@@ -118,8 +119,11 @@ export function IntroOverlay() {
           style={{ animationDelay: "0.8s" }}
         />
       </svg>
+      <AfMark className="intro-mark" />
       <span className="intro-wordmark">adamfanslau</span>
-      <span className="intro-skip-hint">click or press esc to skip</span>
+      <span className="intro-skip-hint">
+        tap or esc to skip · the grid won&apos;t mind
+      </span>
     </div>
   );
 }

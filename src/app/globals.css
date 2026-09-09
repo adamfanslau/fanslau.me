@@ -428,6 +428,31 @@ body::after {
     box-shadow: 0 0 12px -4px var(--glow-cyan);
   }
 
+  /* Header call-to-action: filled, ~26px tall so the 57px header never
+   * grows. Deliberately no breathe animation — the hero button already does. */
+  .nav-cta {
+    display: inline-block;
+    border-radius: var(--radius-sm);
+    padding: 0.3rem 0.75rem;
+    font-family: var(--font-share-mono);
+    font-size: 0.75rem;
+    line-height: 1.2;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--accent-foreground);
+    background: var(--accent);
+    box-shadow: 0 0 14px -4px var(--glow-cyan);
+    transition:
+      filter 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+
+  .nav-cta:hover {
+    filter: brightness(1.08);
+    box-shadow: 0 0 18px -2px var(--glow-cyan);
+  }
+
   /* Scroll progress along the header's bottom edge. Only rendered where CSS
    * scroll-driven animations exist (see the motion block below). */
   .scroll-progress {
@@ -909,6 +934,51 @@ html[data-scrolled] .scroll-cue {
 }
 
 /* ---------------------------------------------------------------------------
+ * "af" mark (af-mark.tsx) — a tiny neon card: framed square, Tron corner
+ * brackets, cyan a+f ligature over a magenta ghost (same chromatic split as
+ * .glitch-text). Colours from tokens so print retokens it; the hover only
+ * nudges the ghost and brightens the brackets, never the size.
+ * ------------------------------------------------------------------------- */
+.af-mark {
+  display: block;
+  overflow: visible;
+  filter: drop-shadow(0 0 6px var(--glow-cyan));
+}
+
+.af-mark-frame {
+  fill: color-mix(in srgb, var(--surface) 90%, transparent);
+  stroke: color-mix(in srgb, var(--accent) 55%, transparent);
+  transition: stroke 0.2s ease;
+}
+
+.af-mark-bracket {
+  stroke: color-mix(in srgb, var(--accent) 70%, transparent);
+  transition: stroke 0.2s ease;
+}
+
+.af-mark-glyph {
+  stroke: var(--accent);
+}
+
+.af-mark-ghost {
+  stroke: var(--accent-2);
+  opacity: 0.7;
+  transform: translate(1px, 0.6px);
+  transition: transform 0.2s ease;
+}
+
+a:hover .af-mark-bracket,
+a:hover .af-mark-frame {
+  stroke: var(--accent);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:hover .af-mark-ghost {
+    transform: translate(2px, 1px);
+  }
+}
+
+/* ---------------------------------------------------------------------------
  * Cyber-tinted profile photo — slight desaturation plus a faint cyan tint
  * and scanlines so a warm photo composes with the neon theme.
  * ------------------------------------------------------------------------- */
@@ -1002,6 +1072,7 @@ html[data-intro="skip"] .intro-overlay {
   inset: 0;
   z-index: 100;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   background: #020308;
@@ -1057,6 +1128,16 @@ html[data-intro="skip"] .intro-overlay {
   }
 }
 
+/* The mark lands just before the wordmark flickers on. */
+.intro-mark {
+  position: relative;
+  width: clamp(3rem, 10vw, 5rem);
+  height: auto;
+  margin-bottom: 1.25rem;
+  opacity: 0;
+  animation: intro-flicker 1.2s steps(1) 0.7s forwards;
+}
+
 .intro-wordmark {
   position: relative;
   font-family: var(--font-orbitron);
@@ -1092,6 +1173,10 @@ html[data-intro="skip"] .intro-overlay {
   bottom: 2.5rem;
   left: 50%;
   transform: translateX(-50%);
+  width: max-content;
+  max-width: calc(100vw - 3rem);
+  text-align: center;
+  text-wrap: balance;
   font-family: var(--font-share-mono);
   font-size: 0.75rem;
   letter-spacing: 0.2em;

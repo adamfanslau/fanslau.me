@@ -38,7 +38,7 @@ export function Hero() {
         />
       </h1>
       <p
-        className="hero-in mt-6 max-w-2xl text-lg text-foreground/90"
+        className="hero-in mt-6 max-w-2xl text-lg text-foreground/90 sm:text-xl"
         style={heroStep(3)}
       >
         {siteConfig.tagline}

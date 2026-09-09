@@ -114,6 +114,15 @@ export function MobileMenu({ items }: { items: SiteConfig["nav"] }) {
                 }`}
                 style={{ transitionDelay: open ? `${i * 40}ms` : "0ms" }}
               >
+                {item.kind === "cta" ? (
+                  <Link
+                    href={item.href}
+                    onClick={() => setOpen(false)}
+                    className="btn-primary my-3 flex justify-center"
+                  >
+                    {item.label}
+                  </Link>
+                ) : (
                 <Link
                   href={item.href}
                   onClick={() => setOpen(false)}
@@ -131,6 +140,7 @@ export function MobileMenu({ items }: { items: SiteConfig["nav"] }) {
                     </span>
                   )}
                 </Link>
+                )}
               </li>
             ))}
           </ul>

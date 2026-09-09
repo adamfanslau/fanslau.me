@@ -5,9 +5,9 @@ import { projects } from "@/content/projects";
 import type { Project } from "@/content/types";
 
 const KIND_LABELS: Record<NonNullable<Project["kind"]>, string> = {
-  client: "Client work",
-  professional: "Employer project",
-  personal: "Personal",
+  client: "Freelance client",
+  professional: "Day job · in production",
+  personal: "Side project",
 };
 
 const PILL =

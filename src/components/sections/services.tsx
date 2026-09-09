@@ -1,5 +1,6 @@
 import { Section } from "@/components/section";
 import { stagger } from "@/components/stagger";
+import { mailto } from "@/components/mailto";
 import { services } from "@/content/services";
 import type { ServiceIcon } from "@/content/types";
 
@@ -30,7 +31,7 @@ export function Services() {
           <article
             key={service.id}
             id={`service-${service.id}`}
-            className="neon-card scroll-mt-24 p-6"
+            className="neon-card flex flex-col scroll-mt-24 p-6"
             data-reveal
             style={stagger(i)}
           >
@@ -55,6 +56,13 @@ export function Services() {
               {service.title}
             </h3>
             <p className="mt-2 text-sm text-muted">{service.description}</p>
+            {/* The "is this for me?" cue, in the buyer's words. */}
+            <p className="mt-3 text-sm text-foreground/90">
+              <span className="mr-1.5 font-mono text-xs uppercase tracking-widest text-accent-2">
+                Good fit if
+              </span>
+              {service.fit}
+            </p>
             {service.highlights && (
               <ul className="mt-4 space-y-1.5 text-sm text-muted">
                 {service.highlights.map((highlight) => (
@@ -67,6 +75,15 @@ export function Services() {
                 ))}
               </ul>
             )}
+            <a
+              href={mailto(`${service.short} enquiry`)}
+              className="link-underline mt-auto self-start pt-5 font-mono text-sm text-accent"
+            >
+              Ask about {service.short.toLowerCase()}{" "}
+              <span aria-hidden="true" className="link-arrow">
+                →
+              </span>
+            </a>
           </article>
         ))}
       </div>

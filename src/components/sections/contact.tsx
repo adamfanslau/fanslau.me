@@ -3,9 +3,10 @@ import { SocialLinks } from "@/components/social-links";
 import { StatusChip } from "@/components/status-chip";
 import { CopyEmail } from "@/components/copy-email";
 import { stagger } from "@/components/stagger";
+import { mailto } from "@/components/mailto";
 import { siteConfig } from "@/content/site";
 
-const MAILTO = `mailto:${siteConfig.email}?subject=${encodeURIComponent("Project enquiry")}`;
+const MAILTO = mailto();
 
 export function Contact() {
   const { contact } = siteConfig;
@@ -23,6 +24,21 @@ export function Contact() {
         <div className="p-6 sm:p-8">
           <StatusChip />
           <p className="mt-4 max-w-2xl text-muted">{contact.intro}</p>
+          {/* The mailto below prefills the same prompts; webmail drops the
+              body, so the hints stay visible here too. */}
+          <p className="mt-5 font-mono text-xs uppercase tracking-widest text-accent-2">
+            Worth including
+          </p>
+          <ul className="mt-2 max-w-2xl space-y-1 font-mono text-sm text-muted">
+            {contact.include.map((hint) => (
+              <li key={hint} className="flex gap-2">
+                <span aria-hidden="true" className="text-accent/60">
+                  ›
+                </span>
+                {hint}
+              </li>
+            ))}
+          </ul>
           <div className="mt-6 flex flex-wrap items-center gap-3">
             <a
               href={MAILTO}

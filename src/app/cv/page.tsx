@@ -3,6 +3,8 @@ import Link from "next/link";
 import { Section } from "@/components/section";
 import { SocialLinks } from "@/components/social-links";
 import { PrintButton } from "@/components/print-button";
+import { StatusChip } from "@/components/status-chip";
+import { mailto } from "@/components/mailto";
 import { heroStep } from "@/components/stagger";
 import { Education, Experience } from "@/components/sections/experience";
 import { Skills } from "@/components/sections/skills";
@@ -27,7 +29,7 @@ export default function CvPage() {
             summary stays legible where it crosses the horizon band. */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 z-[-1]"
+          className="print-hidden pointer-events-none absolute inset-0 z-[-1]"
           style={{
             background:
               "radial-gradient(ellipse 95% 120% at 35% 45%, rgb(5 6 10 / 0.9), transparent 78%)",
@@ -52,13 +54,13 @@ export default function CvPage() {
           {siteConfig.role} · Killarney, Ireland
         </p>
         <p className="hero-in mt-6 max-w-2xl text-muted" style={heroStep(3)}>
-          {siteConfig.about[0]}
+          {siteConfig.about.summary}
         </p>
         <div
           className="hero-in mt-8 flex flex-wrap items-center gap-4"
           style={heroStep(4)}
         >
-          <a href={`mailto:${siteConfig.email}`} className="btn-primary">
+          <a href={mailto("Project enquiry (via CV)")} className="btn-primary">
             Email me
           </a>
           <PrintButton />
@@ -75,17 +77,19 @@ export default function CvPage() {
 
       <Section id="hire" title="Work with me" index="04">
         <div className="neon-card neon-card--solid p-6 sm:p-8" data-reveal>
-          <p className="max-w-2xl text-muted">
+          <StatusChip />
+          <p className="mt-4 max-w-2xl text-muted">
             Looking for freelance help rather than a hire? I build websites,
             automations and AWS back-ends for small businesses and tech teams,
-            and take on a small number of projects at a time.
+            a few projects at a time. Scope and price in writing before any
+            work starts.
           </p>
           <div className="mt-6 flex flex-wrap items-center gap-4">
             <Link href="/#services" className="btn-primary">
               See what I offer
             </Link>
             <a
-              href={`mailto:${siteConfig.email}`}
+              href={mailto("Project enquiry (via CV)")}
               className="link-underline font-mono text-accent"
             >
               {siteConfig.email}

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { siteConfig } from "@/content/site";
+import { AfMark } from "./af-mark";
 import { MobileMenu } from "./mobile-menu";
 import { TerminalLogo } from "./terminal-logo";
 
@@ -7,7 +8,13 @@ export function Header() {
   return (
     <header className="site-header sticky top-0 z-50 border-b border-accent/15 bg-background/70 backdrop-blur">
       <div className="mx-auto flex h-14 max-w-4xl items-center justify-between px-6">
-        <Link href="/#top" className="text-sm tracking-tight">
+        {/* Mark + typing wordmark. The mark is 28px inside the 56px row, so
+            the header stays 57px (HEADER_PX in header-fx / back-to-top). */}
+        <Link
+          href="/#top"
+          className="flex items-center gap-2.5 text-sm tracking-tight"
+        >
+          <AfMark className="size-7 shrink-0" />
           <TerminalLogo />
         </Link>
         {/* Inline nav from `sm` up; below that MobileMenu renders the hamburger. */}
@@ -17,6 +24,10 @@ export function Header() {
               <li key={item.href}>
                 {item.kind === "page" ? (
                   <Link href={item.href} className="nav-pill">
+                    {item.label}
+                  </Link>
+                ) : item.kind === "cta" ? (
+                  <Link href={item.href} className="nav-cta">
                     {item.label}
                   </Link>
                 ) : (

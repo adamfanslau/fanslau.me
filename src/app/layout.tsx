@@ -7,6 +7,7 @@ import { IntroOverlay } from "@/components/intro/intro-overlay";
 import { ScrambleFx } from "@/components/scramble-fx";
 import { RevealFx } from "@/components/reveal-fx";
 import { PointerFx } from "@/components/pointer-fx";
+import { ConsoleFx } from "@/components/console-fx";
 import { HeaderFx } from "@/components/header-fx";
 import { BackToTop } from "@/components/back-to-top";
 import { siteConfig } from "@/content/site";
@@ -161,6 +162,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <ScrambleFx />
         <RevealFx />
         <PointerFx />
+        <ConsoleFx />
         <HeaderFx />
         <BackToTop />
         {beaconToken && (
