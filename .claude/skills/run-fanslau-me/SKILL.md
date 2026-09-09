@@ -107,6 +107,24 @@ moment: `[data-reveal]` elements (cards, the h2 wrapper) rise 14px and
 without `data-reveal` (`#section > div`, `.grid`, the next `<section>`) are
 the reliable neighbours.
 
+### Driving the Cloudflare Workers build
+
+The site deploys as static assets built by `vinext build` (see README
+"Deployment"). The driver only auto-starts `next dev`, so start the Workers
+preview yourself and point the driver at it:
+
+```bash
+npm run preview:vinext &          # vinext build, then wrangler dev on :8787
+APP_URL=http://localhost:8787 node .claude/skills/run-fanslau-me/driver.mjs smoke
+APP_URL=http://localhost:8787 node .claude/skills/run-fanslau-me/driver.mjs shot --path=/cv --media=print --full=true
+lsof -ti:8787 -sTCP:LISTEN | xargs kill
+```
+
+Route-level checks that matter there: `/cv` 200 from `cv.html`, `/bug-blaster`
+307 → `/bug-blaster/`, `/sitemap.xml`, `/robots.txt`, `/opengraph-image.png`
+200 (static files in `public/`), `/nope` 404 with the exported `404.html`,
+`/_next/static/*` with `Cache-Control: … immutable` (from `public/_headers`).
+
 ## Run (human path)
 
 ```bash
@@ -121,8 +139,9 @@ lsof -ti:3000 -sTCP:LISTEN | xargs kill
 
 ## Test
 
-There is no test suite. `npm run lint` + `npm run build` + the driver's
-`smoke` are the checks.
+There is no test suite. `npm run lint` + `npm run build:vinext` (the deployed
+artefact; `npm run build` checks the Next.js export still compiles) + the
+driver's `smoke` are the checks.
 
 ## Gotchas
 

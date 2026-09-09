@@ -1,0 +1,19 @@
+{
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  // Must match the Worker name in the Cloudflare dashboard (Workers Builds).
+  "name": "fanslau-me",
+  "compatibility_date": "2026-09-09",
+  "preview_urls": true,
+  // Assets-only Worker: `vinext build` (output: "export") writes the whole
+  // site to dist/client and nothing runs at request time — no `main`, no
+  // compatibility flags. This file lives outside the project root on
+  // purpose: a wrangler config at the root makes vinext assume a Worker
+  // (SSR) build and require @cloudflare/vite-plugin.
+  //
+  // Default html_handling ("auto-trailing-slash") serves /cv from cv.html
+  // and /bug-blaster/ from bug-blaster/index.html.
+  "assets": {
+    "directory": "../dist/client",
+    "not_found_handling": "404-page"
+  }
+}

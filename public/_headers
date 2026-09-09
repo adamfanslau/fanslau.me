@@ -1,0 +1,10 @@
+# Parsed by Cloudflare Workers Static Assets; never served.
+# Default for everything else is `public, max-age=0, must-revalidate` + ETag.
+
+# Content-hashed JS/CSS/fonts/media from `vinext build`.
+/_next/static/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Content-hashed bundle of the prebuilt Bug Blaster game.
+/bug-blaster/assets/*
+  Cache-Control: public, max-age=31536000, immutable

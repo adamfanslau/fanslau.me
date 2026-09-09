@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Static: vinext's export does not render app/sitemap.ts. Add new routes here as the site grows, e.g. /blog. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://fanslau.me/</loc>
+  </url>
+  <url>
+    <loc>https://fanslau.me/cv</loc>
+  </url>
+</urlset>

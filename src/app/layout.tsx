@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Orbitron, Share_Tech_Mono } from "next/font/google";
-import { Analytics } from "@vercel/analytics/next";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { TronBackground } from "@/components/background/tron-background";
@@ -33,6 +32,17 @@ const shareTechMono = Share_Tech_Mono({
 
 const SITE_TITLE = `${siteConfig.name} · Websites, Automation & AWS Cloud · Killarney`;
 
+// Static PNG in public/ (rendered once from the former app/opengraph-image.tsx
+// next/og template, see git history): vinext's static export does not render
+// dynamic metadata routes, and neither does it render sitemap.ts/robots.ts —
+// those are static files in public/ too.
+const OG_IMAGE = {
+  url: "/opengraph-image.png",
+  width: 1200,
+  height: 630,
+  alt: `${siteConfig.name} — websites, automation and AWS cloud services, Killarney, Kerry`,
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
@@ -47,9 +57,11 @@ export const metadata: Metadata = {
     title: SITE_TITLE,
     description: siteConfig.description,
     locale: "en_IE",
+    images: [OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
+    images: [OG_IMAGE],
   },
   alternates: {
     canonical: "/",
@@ -125,6 +137,10 @@ const jsonLd = {
 //    motion is welcome, so no-JS visitors see everything immediately.
 const prePaintScript = `try{var d=document.documentElement,r=matchMedia("(prefers-reduced-motion: reduce)").matches;if(sessionStorage.getItem("af-intro")==="1"||r)d.dataset.intro="skip";if(!r)d.dataset.reveal=""}catch(e){}`;
 
+// Cloudflare Web Analytics beacon. The site token is inlined at build time
+// (NEXT_PUBLIC_ prefix); unset locally, so no beacon is rendered in dev.
+const beaconToken = process.env.NEXT_PUBLIC_CF_BEACON_TOKEN;
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     // suppressHydrationWarning: the pre-paint script stamps data-* on <html>.
@@ -147,7 +163,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <PointerFx />
         <HeaderFx />
         <BackToTop />
-        <Analytics />
+        {beaconToken && (
+          <script
+            defer
+            src="https://static.cloudflareinsights.com/beacon.min.js"
+            data-cf-beacon={JSON.stringify({ token: beaconToken })}
+          />
+        )}
       </body>
     </html>
   );
