@@ -9,7 +9,7 @@ export const projects = [
     tech: ["HTML", "CSS", "JavaScript"],
     kind: "client",
     // Client has not promoted the new build to the domain root yet.
-    url: "https://www.timbeestoncleaning.ie/test6.html",
+    url: "https://www.timbeestoncleaning.ie/test7.html",
     urlLabel: "Preview",
     image: "/projects/tim-beeston.jpg",
     year: 2026,
