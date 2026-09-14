@@ -125,6 +125,29 @@ Route-level checks that matter there: `/cv` 200 from `cv.html`, `/bug-blaster`
 200 (static files in `public/`), `/nope` 404 with the exported `404.html`,
 `/_next/static/*` with `Cache-Control: … immutable` (from `public/_headers`).
 
+### iOS Simulator (Safari 26 status bar)
+
+The simulator shares the Mac's loopback, so its Safari reaches the dev
+server at `http://localhost:3000` directly. `xcrun simctl` cannot tap or
+scroll, so load a fragment URL to land scrolled, and change a throwaway
+query each time so Safari actually reloads:
+
+```bash
+xcrun simctl list devices booted                                   # need one Booted device
+xcrun simctl openurl booted "http://localhost:3000/?s=1#contact"; sleep 6
+xcrun simctl io booted screenshot /tmp/sim.png                     # 1206×2622 on iPhone 17 Pro
+```
+
+Then Read the PNG (crop the top ~420px if you need the status-bar detail;
+`sips -c` crops from the centre, so use a small CoreGraphics script). Note
+that iOS 26 Safari reports `env(safe-area-inset-top)` as 0 even with
+`viewport-fit=cover` (the page never extends under the status bar); it
+paints the status-bar strip from the topmost fixed/sticky layer at the top
+edge instead. That is why the header is `z-[95]`, above `body::before/::after`.
+Layers below ~8px tall and layers with only a transparent/gradient
+background are not sampled. To prove which layer is sampled, temporarily
+give it a garish `background-color` and screenshot.
+
 ## Run (human path)
 
 ```bash
@@ -170,6 +193,9 @@ driver's `smoke` are the checks.
   ≥600ms before asserting hidden/visible.
 - **Sticky header is 57px** (`h-14` inner div + 1px border), not 56 — matters
   for `scroll-margin` and `IntersectionObserver` root margins.
+- **Header z-index must stay above the vignette/scanline films** (`z-[95]`
+  vs 80/90, intro overlay 100). Lowering it brings back scrolled content
+  showing through the iOS 26 status bar (see "iOS Simulator" above).
 - **`header nav.max-sm\\:hidden`** — Tailwind's `:` needs double-escaping in
   `querySelector` inside `page.evaluate` strings.
 - **Smooth scrolling** is on for non-reduced-motion users; the driver sets

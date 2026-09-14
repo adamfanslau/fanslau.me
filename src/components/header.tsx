@@ -6,7 +6,13 @@ import { TerminalLogo } from "./terminal-logo";
 
 export function Header() {
   return (
-    <header className="site-header sticky top-0 z-50 border-b border-accent/15 bg-background/70 backdrop-blur">
+    // z-[95]: above the fixed vignette (z 80) and scanlines (z 90), below the
+    // intro overlay (z 100). iOS 26 Safari paints the status-bar strip from the
+    // topmost fixed/sticky layer touching the top edge; when that was the
+    // (transparent) scanline film, scrolled content showed through the status
+    // bar. With the header on top Safari samples its background instead and
+    // the strip goes solid. Verified in the iPhone 17 Pro / iOS 26.3 simulator.
+    <header className="site-header sticky top-0 z-[95] border-b border-accent/15 bg-background/70 backdrop-blur">
       <div className="mx-auto flex h-14 max-w-4xl items-center justify-between px-6">
         {/* Mark + typing wordmark. The mark is 28px inside the 56px row, so
             the header stays 57px (HEADER_PX in header-fx / back-to-top). */}

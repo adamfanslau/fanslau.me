@@ -56,7 +56,10 @@ body {
   font-family: var(--font-geist-sans);
 }
 
-/* Fixed vignette darkening the viewport edges (below scanlines). */
+/* Fixed vignette darkening the viewport edges (below scanlines). Both films
+ * sit under the header (z 95): iOS 26 Safari colours the status bar from the
+ * topmost fixed/sticky layer at the top edge, and a transparent film there
+ * lets scrolled content show through the status bar (see header.tsx). */
 body::before {
   content: "";
   position: fixed;
@@ -70,7 +73,8 @@ body::before {
   );
 }
 
-/* CRT scanline overlay. Static (not motion), so no reduced-motion gate. */
+/* CRT scanline overlay. Static (not motion), so no reduced-motion gate.
+ * Keep z-index below the header's 95 (see the vignette note above). */
 body::after {
   content: "";
   position: fixed;
