@@ -8,9 +8,7 @@ export const projects = [
       "New website for a family-run cleaning business in Killarney, replacing a template site: services, before-and-after gallery, team profiles, FAQ, Instagram feed and WhatsApp contact. A lightweight static build that loads fast on a phone.",
     tech: ["HTML", "CSS", "JavaScript"],
     kind: "client",
-    // Client has not promoted the new build to the domain root yet.
-    url: "https://www.timbeestoncleaning.ie/test7.html",
-    urlLabel: "Preview",
+    url: "https://timbeestoncleaning.ie",
     image: "/projects/tim-beeston.jpg",
     year: 2026,
   },
