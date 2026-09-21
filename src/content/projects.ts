@@ -34,10 +34,10 @@ export const projects = [
     id: "bug-blaster",
     title: "Bug Blaster",
     description:
-      "The most honest production incident simulator ever built: an HTML5 canvas shooter where you defend the codebase by blasting syntax errors, logic bugs, and memory leaks before they ship. Written from scratch in TypeScript — no game engine, no mercy. Playable right here.",
+      "The most honest production incident simulator ever built: an HTML5 canvas shooter where you defend the codebase by blasting syntax errors, logic bugs, and memory leaks before they ship. Written from scratch in TypeScript — no game engine, no mercy. Playable at bugblaster.fanslau.me.",
     tech: ["TypeScript", "HTML5 Canvas", "Vite"],
     kind: "personal",
-    url: "/bug-blaster",
+    url: "https://bugblaster.fanslau.me",
     urlLabel: "▶ Play",
     repoUrl: "https://github.com/adamfanslau/bug-blaster",
     image: "/projects/bug-blaster-branded.png",

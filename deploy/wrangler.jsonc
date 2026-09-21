@@ -10,8 +10,9 @@
   // purpose: a wrangler config at the root makes vinext assume a Worker
   // (SSR) build and require @cloudflare/vite-plugin.
   //
-  // Default html_handling ("auto-trailing-slash") serves /cv from cv.html
-  // and /bug-blaster/ from bug-blaster/index.html.
+  // Default html_handling ("auto-trailing-slash") serves /cv from cv.html.
+  // public/_redirects (copied into dist/client) 301s the old /bug-blaster
+  // URLs to bugblaster.fanslau.me, where the game now lives.
   "assets": {
     "directory": "../dist/client",
     "not_found_handling": "404-page"

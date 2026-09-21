@@ -1,0 +1,4 @@
+# Parsed by Cloudflare Workers Static Assets; never served.
+# Bug Blaster moved to its own host on the VPS; keep the old links working.
+/bug-blaster    https://bugblaster.fanslau.me/  301
+/bug-blaster/*  https://bugblaster.fanslau.me/:splat  301

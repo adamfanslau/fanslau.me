@@ -12,7 +12,7 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
-    // Static assets, incl. the prebuilt bug-blaster game bundle.
+    // Static assets (public/).
     "public/**",
     // vinext / wrangler output.
     "dist/**",

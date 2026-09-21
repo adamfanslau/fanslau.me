@@ -121,7 +121,8 @@ lsof -ti:8787 -sTCP:LISTEN | xargs kill
 ```
 
 Route-level checks that matter there: `/cv` 200 from `cv.html`, `/bug-blaster`
-307 → `/bug-blaster/`, `/sitemap.xml`, `/robots.txt`, `/opengraph-image.png`
+and `/bug-blaster/*` 301 → `https://bugblaster.fanslau.me/…` (from
+`public/_redirects`), `/sitemap.xml`, `/robots.txt`, `/opengraph-image.png`
 200 (static files in `public/`), `/nope` 404 with the exported `404.html`,
 `/_next/static/*` with `Cache-Control: … immutable` (from `public/_headers`).
 

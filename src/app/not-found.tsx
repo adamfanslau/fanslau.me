@@ -59,7 +59,12 @@ export default function NotFound() {
             style={heroStep(4)}
           >
             Consolation prize:{" "}
-            <a href="/bug-blaster" className="link-underline text-accent">
+            <a
+              href="https://bugblaster.fanslau.me"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="link-underline text-accent"
+            >
               play Bug Blaster{" "}
               <span aria-hidden="true" className="link-arrow">
                 ↗

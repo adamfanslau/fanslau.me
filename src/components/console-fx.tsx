@@ -25,7 +25,7 @@ export function ConsoleFx() {
         `${siteConfig.name} — freelance software engineer, Killarney.`,
         "You're in the console, so you're probably a developer.",
         `Hiring? ${siteConfig.url}/cv  ·  Have a project? ${siteConfig.email}`,
-        "Bugs? None here. They're all in /bug-blaster.",
+        "Bugs? None here. They're all at https://bugblaster.fanslau.me.",
       ].join("\n"),
     );
   }, []);

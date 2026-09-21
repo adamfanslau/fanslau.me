@@ -33,7 +33,8 @@ Static metadata files live in [public/](public/) because vinext's static export 
 - `sitemap.xml` — add new routes here as the site grows
 - `robots.txt`
 - `opengraph-image.png` — 1200×630 social card, referenced from `metadata` in `src/app/layout.tsx`. The `next/og` template it was rendered from is in git history (`src/app/opengraph-image.tsx` before the Cloudflare migration).
-- `_headers` — immutable caching for content-hashed `/_next/static/*` and the Bug Blaster bundle
+- `_headers` — immutable caching for content-hashed `/_next/static/*`
+- `_redirects` — 301s the old `/bug-blaster` URLs to [bugblaster.fanslau.me](https://bugblaster.fanslau.me), where the game is now hosted (its own repo deploys it to the VPS)
 
 ## Deployment
 
@@ -48,4 +49,4 @@ Deploys run through **Workers Builds** (Cloudflare's Git integration), so pushin
 - Build variable `NEXT_PUBLIC_CF_BEACON_TOKEN` — the Cloudflare Web Analytics site token (dashboard → Web Analytics → Add a site → manual setup). When it is set the layout renders the analytics beacon; locally it is unset (or lives in a gitignored `.env.local`) so dev builds send nothing.
 - Custom domain: Worker → Settings → Domains & Routes → add `fanslau.me` (and `www.fanslau.me`). The domain's DNS has to be on Cloudflare.
 
-Routing behaviour worth knowing: the default `html_handling` serves `/cv` from `cv.html` and `/bug-blaster/` from `bug-blaster/index.html` (`/bug-blaster` 307s to the slash form); unknown paths get the exported `404.html`.
+Routing behaviour worth knowing: the default `html_handling` serves `/cv` from `cv.html`; `/bug-blaster` and anything under it 301 to `https://bugblaster.fanslau.me` via `public/_redirects`; unknown paths get the exported `404.html`.
