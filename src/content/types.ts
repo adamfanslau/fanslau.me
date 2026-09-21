@@ -106,8 +106,14 @@ export interface Project {
   urlLabel?: string;
   repoUrl?: string;
   year?: number;
-  /** Screenshot under public/, e.g. "/projects/bug-blaster.png". */
+  /** Screenshot under public/, e.g. "/projects/tim-beeston.jpg". */
   image?: string;
+  /**
+   * Optional looping clip shown instead of `image` (which then acts as the
+   * poster and as the fallback under prefers-reduced-motion). Paths under
+   * public/; keep them small, they autoplay on the home page.
+   */
+  video?: { mp4: string; webm?: string };
 }
 
 export interface SkillCategory {

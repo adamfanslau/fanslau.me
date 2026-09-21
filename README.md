@@ -25,7 +25,7 @@ All copy lives in typed data files under [src/content/](src/content/) — compon
 
 - `site.ts` — name, role, tagline, meta description, availability chip, About (summary, `whoami` facts, stats strip, photo caption), Contact intro / "Worth including" hints / prefilled email template / "How it works" steps, footer note, email, social links, nav (incl. the header CTA)
 - `services.ts` — the three service pillars (Websites · Automation · Cloud) with icons and hero-tile labels
-- `projects.ts` — portfolio projects (the "Work" section)
+- `projects.ts` — portfolio projects (the "Work" section). A project can carry a short looping `video` (mp4 + webm under `public/projects/`) that plays over its `image`, which doubles as poster and reduced-motion fallback
 - `experience.ts`, `skills.ts` — CV content, rendered on the `/cv` page (printable via the page's Print button)
 
 Static metadata files live in [public/](public/) because vinext's static export does not render `app/sitemap.ts`, `app/robots.ts` or `app/opengraph-image.tsx`:

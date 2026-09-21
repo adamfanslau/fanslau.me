@@ -34,13 +34,17 @@ export const projects = [
     id: "bug-blaster",
     title: "Bug Blaster",
     description:
-      "The most honest production incident simulator ever built: an HTML5 canvas shooter where you defend the codebase by blasting syntax errors, logic bugs, and memory leaks before they ship. Written from scratch in TypeScript — no game engine, no mercy. Playable at bugblaster.fanslau.me.",
-    tech: ["TypeScript", "HTML5 Canvas", "Vite"],
+      "It's Sprint 47, the build is red, and you are the CI. A synthwave canvas shooter where `missing ;`, `undefined is not a function` and a memory leak with a live MB counter charge down a neon corridor toward your desk. Every bug you miss ships to production and costs you a coffee; run out and you get a Production Incident Postmortem, with story points. Fill the RAGE meter and answer with git push --force. Zero dependencies, zero asset files, zero mercy.",
+    tech: ["TypeScript", "HTML5 Canvas", "Web Audio", "Vite"],
     kind: "personal",
     url: "https://bugblaster.fanslau.me",
     urlLabel: "▶ Play",
     repoUrl: "https://github.com/adamfanslau/bug-blaster",
-    image: "/projects/bug-blaster-branded.png",
+    image: "/projects/bug-blaster-poster.jpg",
+    video: {
+      mp4: "/projects/bug-blaster.mp4",
+      webm: "/projects/bug-blaster.webm",
+    },
     year: 2026,
   },
 ] satisfies Project[];
