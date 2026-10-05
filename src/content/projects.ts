@@ -13,20 +13,11 @@ export const projects = [
     year: 2026,
   },
   {
-    id: "netfeasa-apps",
-    title: "Cross-Platform IoT Apps",
-    description:
-      "Two field apps for an IoT company, built so one TypeScript codebase ships to iOS, Android, web and Windows. They keep working offline and sync when back online; releases to every platform are automated.",
-    tech: ["React Native", "Expo", "TypeScript", "AWS Cognito", "GitHub Actions"],
-    kind: "professional",
-    year: 2025,
-  },
-  {
     id: "lens",
     title: "Lens",
     description:
-      "A public demo of a private AI stack: drop in a PDF and get the key facts as strict JSON plus a plain-language explanation, point it at a photo and it transcribes and describes it, or just chat. Two open-weight Qwen models run on a six-core desktop in my house; a Go API on a small VPS queues the work and streams results over a Tailscale tunnel. No account, files deleted after 24 hours.",
-    tech: ["Go", "React", "TypeScript", "Tailwind", "SQLite", "llama.cpp", "Tailscale", "Cloudflare"],
+      "A public demo of a private AI stack: drop in a PDF and get the key facts as strict JSON plus a plain-language explanation, point it at a photo and it transcribes and describes it, or just chat. Two open-weight Qwen models run on a six-core desktop in my house; a Go API queues the work and streams results back as they arrive. No account, files deleted after 24 hours.",
+    tech: ["Go", "React", "TypeScript", "Tailwind", "SQLite", "llama.cpp", "Cloudflare"],
     kind: "personal",
     url: "https://lens.fanslau.me",
     urlLabel: "◉ Try it",
@@ -49,5 +40,14 @@ export const projects = [
       webm: "/projects/bug-blaster.webm",
     },
     year: 2026,
+  },
+  {
+    id: "netfeasa-apps",
+    title: "Cross-Platform IoT Apps",
+    description:
+      "Two field apps for an IoT company, built so one TypeScript codebase ships to iOS, Android, web and Windows. They keep working offline and sync when back online; releases to every platform are automated.",
+    tech: ["React Native", "Expo", "TypeScript", "AWS Cognito", "GitHub Actions"],
+    kind: "professional",
+    year: 2025,
   },
 ] satisfies Project[];
