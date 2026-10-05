@@ -22,13 +22,16 @@ export const projects = [
     year: 2025,
   },
   {
-    id: "roaming-billing-pipeline",
-    title: "Serverless Roaming-Billing Pipeline",
+    id: "lens",
+    title: "Lens",
     description:
-      "Telecom billing files processed on AWS automatically, the moment they arrive or on a schedule, with alerts when a step fails. Infrastructure defined as code (Pulumi) across dev and prod in multiple regions, with end-to-end tests.",
-    tech: ["Python", "AWS Lambda", "S3", "EventBridge", "Pulumi"],
-    kind: "professional",
-    year: 2025,
+      "A public demo of a private AI stack: drop in a PDF and get the key facts as strict JSON plus a plain-language explanation, point it at a photo and it transcribes and describes it, or just chat. Two open-weight Qwen models run on a six-core desktop in my house; a Go API on a small VPS queues the work and streams results over a Tailscale tunnel. No account, files deleted after 24 hours.",
+    tech: ["Go", "React", "TypeScript", "Tailwind", "SQLite", "llama.cpp", "Tailscale", "Cloudflare"],
+    kind: "personal",
+    url: "https://lens.fanslau.me",
+    urlLabel: "◉ Try it",
+    image: "/projects/lens.jpg",
+    year: 2026,
   },
   {
     id: "bug-blaster",
