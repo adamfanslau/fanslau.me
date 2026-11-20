@@ -42,12 +42,15 @@ export const projects = [
     year: 2026,
   },
   {
-    id: "netfeasa-apps",
-    title: "Cross-Platform IoT Apps",
+    id: "synth",
+    title: "AI Synth Studio",
     description:
-      "Two field apps for an IoT company, built so one TypeScript codebase ships to iOS, Android, web and Windows. They keep working offline and sync when back online; releases to every platform are automated.",
-    tech: ["React Native", "Expo", "TypeScript", "AWS Cognito", "GitHub Actions"],
-    kind: "professional",
-    year: 2025,
+      "Two synthesizers in the browser and a sound designer that turns the knobs for you. Model F is a three-oscillator monosynth in the 1970s mould with a ladder filter; Drift is a self-playing groove and drone machine with generated patterns, bass and drums. Describe a sound and the same home-hosted Qwen model behind Lens writes a grammar-constrained patch sheet that sets every control. All the audio is hand-written DSP in an AudioWorklet; plug in a MIDI keyboard, or share a patch as a link.",
+    tech: ["TypeScript", "React", "Web Audio", "Go", "llama.cpp", "Tailwind"],
+    kind: "personal",
+    url: "https://synth.fanslau.me",
+    urlLabel: "▶ Play",
+    image: "/projects/synth.jpg",
+    year: 2026,
   },
 ] satisfies Project[];
